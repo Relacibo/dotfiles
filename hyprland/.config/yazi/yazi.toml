@@ -1,0 +1,31 @@
+[opener]
+
+image = [{ run = 'swayimg $@', orphan = true, block = false }]
+
+play = [{ run = 'flatpak run org.kde.haruna $@', orphan = true, block = false }]
+
+table = [
+  # { desc = 'libreoffice calc -- New Window', run = 'wezterm start libreoffice --calc $@', orphan = true, block = false, for = "unix" },
+  # { desc = 'libreoffice calc', run = 'libreoffice --calc $@', block = true, for = "unix" },
+  { desc = 'libreoffice', run = 'libreoffice --calc $@', block = true, for = "unix" },
+]
+
+markdown = [{ desc = 'md-tui', run = 'mdt $@', block = true }]
+
+edit = [
+  { desc = 'Helix', run = 'hx $@', block = true, for = "unix" },
+  { desc = 'Helix - New Window', run = 'wezterm start hx $@', block = false, ophan = true, for = "unix" },
+  { desc = 'Terminal - New Window', run = 'wezterm start --cwd $@', block = false, ophan = true, for = "unix" },
+  { desc = 'VSCode', run = 'code $@', block = false, ophan = true },
+]
+
+pdf = [{ run = 'masterpdfeditor5 $@', oprhan = true, block = false }]
+
+[open]
+prepend_rules = [
+  # { mime = "audio/*", use = "play" },
+  { mime = "image/*", use = "image" },
+  { name = "*.csv", use = "table" },
+  { name = "*.md", use = "markdown" },
+]
+append_rules = [{ name = "*.pdf", use = "pdf" }]

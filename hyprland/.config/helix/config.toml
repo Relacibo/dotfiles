@@ -1,0 +1,14 @@
+theme = "github_dark_high_contrast_custom"
+
+[keys.insert]
+"C-space" = "completion"
+
+[keys.normal]
+"C-space" = "completion"
+[keys.normal.space]
+"l" = ":lsp-stop"
+"L" = ":lsp-restart"
+"u" = ":theme github_dark_high_contrast_custom_no_underlines"
+"U" = ":theme github_dark_high_contrast_custom"
+# [editor.lsp]
+# display-inlay-hints = true

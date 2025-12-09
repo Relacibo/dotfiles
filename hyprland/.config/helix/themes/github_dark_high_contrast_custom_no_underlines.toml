@@ -1,0 +1,4 @@
+inherits = "github_dark_high_contrast_custom"
+
+"diagnostic.error" = { modifiers = [] }
+"diagnostic.warning" = { modifiers = [] }

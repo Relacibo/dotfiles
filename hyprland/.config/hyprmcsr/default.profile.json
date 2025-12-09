@@ -1,0 +1,69 @@
+{
+  "requireSudo": true,
+  "onStart": [
+    {
+      "if": "[ \"$PROFILE\" = \"coop\" ]",
+      "exec": "JAR_WORKDIR=\"$HOME/.config/NinjaLink\" $HYPRMCSR run-jar NinjaLink"
+    },
+    "$HYPRMCSR run-jar Ninjabrain-Bot",
+    "# obs",
+    "input-remapper-control --command start --device \"Razer Razer Viper V3 Pro\" --preset \"MCSR\"",
+    "prismlauncher -l \"1.16.1\"",
+    "sudo input-remapper-control --command start --device \"Ducky Ducky One 3 TKL \" --preset \"MCSR\"",
+    "~/.local/bin/razer-cli --dpi 14400",
+    "hyprctl keyword input:sensitivity -0.9"
+  ],
+  "onDestroy": [
+    "sudo input-remapper-control --command stop-all",
+    "~/.local/bin/razer-cli --dpi 1800",
+    "hyprctl keyword input:sensitivity 0.0"
+  ],
+  "binds": {
+    "toggleBinds": ",HOME",
+    "modeSwitch": {
+      "tall": ",H",
+      "boat-eye": ",J",
+      "planar-abuse": ",Z"
+    }
+  },
+  "modeSwitch": {
+    "default": {
+      "size": "1920x1080",
+      "sensitivity": "-0.9"
+    },
+    "modes": {
+      "normal": {},
+      "tall": {
+        "size": "350x750"
+      },
+      "boat-eye": {
+        "size": "384x16384",
+        "sensitivity": "-0.96875",
+        "onEnter": [
+          "~/.local/bin/obs-cli item show --scene 'MCSR VK-Capture BoatEye' 'Spielaufnahme 2'",
+          "~/.local/bin/razer-cli --dpi 100"
+        ],
+        "onExit": [
+          "~/.local/bin/obs-cli item hide --scene  'MCSR VK-Capture BoatEye' 'Spielaufnahme 2'",
+          "~/.local/bin/razer-cli --dpi 14400"
+        ]
+      },
+      "planar-abuse": {
+        "size": "1920x420"
+      }
+    }
+  },
+  "minecraft": {
+    "windowTitleRegex": "Minecraft",
+    "observeLog": {
+      "enabled": true
+    },
+    "prismWrapperCommand": {
+      "autoReplace": true,
+      "prismMinecraftInstanceIds": [
+        "1.16.1"
+      ],
+      "innerCommand": "obs-gamecapture"
+    }
+  }
+}

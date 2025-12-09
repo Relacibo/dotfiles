@@ -1,0 +1,35 @@
+[include]
+	path = .config/delta/themes.gitconfig
+[user]
+	email = reinhard_bronner@t-online.de
+	name = Reinhard Bronner
+	signingkey = 0A4A7BB31FD42391
+[core]
+	editor = hx
+	pager = delta
+[commit]
+	gpgsign = true
+[gpg]
+	program = gpg
+[init]
+	defaultBranch = main
+[push]
+	autoSetupRemote = true
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+[safe]
+	directory = /opt/flutter
+[credential]
+	helper = store
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	# features = colibri
+	syntax-theme = Monokai Extended
+	navigate = true
+	side-by-side = true
+[merge]
+	conflictStyle = zdiff3

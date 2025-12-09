@@ -1,0 +1,15 @@
+{
+  "pipewireLoopback": {
+    "enabled": true,
+    "playbackTarget": "alsa_output.usb-SteelSeries_Arctis_7_-00.iec958-stereo"
+  },
+  "download": {
+    "jar": [
+      "tildejustin/modcheck",
+      "Ninjabrain1/Ninjabrain-Bot",
+      "DuncanRuns/NinjaLink",
+      "PaceMan-MCSR/PaceMan-Tracker",
+      "cylorun/Map-Check"
+    ]
+  }
+}

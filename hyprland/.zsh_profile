@@ -1,0 +1,7 @@
+export PATH="$HOME/.poetry/bin:$HOME/programs/flutter/bin:$PATH:$HOME/go/bin:$HOME/programs/firefox:$(yarn global bin)"
+
+export WINEDLLPATH=$WINEDLLPATH:/opt/rpc-wine/bin64:/opt/rpc-wine/bin32
+
+# Added by Toolbox App
+export PATH="$PATH:/home/reinhard/.local/share/JetBrains/Toolbox/scripts:/opt/postman/Postman/:/home/reinhard/go/bin"
+alias chamberprod='aws-vault exec production -- chamber'

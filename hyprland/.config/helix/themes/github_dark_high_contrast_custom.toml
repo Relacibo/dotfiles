@@ -1,0 +1,6 @@
+inherits = "github_dark_high_contrast"
+
+# Primärer Cursor
+"ui.cursor.primary.normal" = { bg = "#bbe2ff", fg = "#0a0c10" }
+"ui.cursor.primary.select" = { bg = "#bbe2ff", fg = "#0a0c10" }
+"ui.cursor.primary.insert" = { bg = "#bbe2ff", fg = "#0a0c10" }
