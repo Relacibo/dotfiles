@@ -42,9 +42,10 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+if command -v helix > /dev/null; then
+    # Wenn 'helix' gefunden wird, Alias setzen
+    alias hx='helix'
+fi
 
 export PATH="$HOME/programs/blender:$PATH"
 export PATH="$HOME/git/hyprmcsr/bin:$PATH"
@@ -52,3 +53,7 @@ export PATH="$HOME/programs/roc/:$PATH"
 export PATH="$HOME/git/roc/zig-out/bin:$PATH"
 
 source /home/reinhard/git/hyprmcsr/tab-completions/hyprmcsr.bash-completion
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
