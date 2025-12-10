@@ -1,8 +1,13 @@
-# .bashrc
+#
+# ~/.bashrc
+#
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
-	. /etc/bashrc
+        . /etc/bashrc
 fi
 
 # User specific environment
@@ -17,22 +22,20 @@ export PATH
 
 # User specific aliases and functions
 if [ -d ~/.bashrc.d ]; then
-	for rc in ~/.bashrc.d/*; do
-		if [ -f "$rc" ]; then
-			. "$rc"
-		fi
-	done
+        for rc in ~/.bashrc.d/*; do
+                if [ -f "$rc" ]; then
+                        . "$rc"
+                fi
+        done
 fi
 
 unset rc
-# PATH="$PATH:$(yarn global bin)"
-export PATH="$HOME/programs/blender:$PATH"
-export PATH="$HOME/git/hyprmcsr/bin:$PATH"
-export PATH="$HOME/programs/roc/:$PATH"
-export PATH="$HOME/git/roc/zig-out/bin:$PATH"
-# PATH="$HOME/.local/bin"
-export PATH
+
 alias firefox-dev="$HOME/programs/firefox-dev/firefox"
+
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+PS1='[\u@\h \W]\$ '
 . "$HOME/.cargo/env"
 
 export NVM_DIR="$HOME/.nvm"
@@ -42,5 +45,10 @@ export NVM_DIR="$HOME/.nvm"
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+export PATH="$HOME/programs/blender:$PATH"
+export PATH="$HOME/git/hyprmcsr/bin:$PATH"
+export PATH="$HOME/programs/roc/:$PATH"
+export PATH="$HOME/git/roc/zig-out/bin:$PATH"
 
 source /home/reinhard/git/hyprmcsr/tab-completions/hyprmcsr.bash-completion
