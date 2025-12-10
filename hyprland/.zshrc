@@ -17,13 +17,12 @@ fi
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-source $ZSH/oh-my-zsh.sh
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-# ZSH_THEME="robbyrussell"
+ZSH_THEME="robbyrussell"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -87,6 +86,8 @@ source $ZSH/oh-my-zsh.sh
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(poetry git)
 
+source $ZSH/oh-my-zsh.sh
+
 # User configuration
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -138,7 +139,10 @@ export NVM_DIR="/home/reinhard/.nvm"
 export ANDROID_HOME="$HOME/.android-sdk"
 
 alias firefox-dev="$HOME/programs/firefox-dev/firefox"
-alias hx='helix'
+if command -v helix > /dev/null; then
+    # Wenn 'helix' gefunden wird, Alias setzen
+    alias hx='helix'
+fi
 
 function yz() {
         local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
