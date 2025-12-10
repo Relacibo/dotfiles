@@ -1,14 +1,19 @@
-local wezterm = require 'wezterm';
-local config = wezterm.config_builder();
+-- Pull in the wezterm API
+local wezterm = require 'wezterm'
 
--- Tab-Leiste grundsätzlich aktiviert …
+-- This will hold the configuration.
+local config = wezterm.config_builder()
+
+-- enable tab bar...
 config.enable_tab_bar = true
--- … aber nur sichtbar, wenn mehrere Tabs bestehen
+-- ...but only if multiple tabs exist
 config.hide_tab_bar_if_only_one_tab = true
 
 config.colors = {
   background = "#0a0c10"
 }
+
+config.default_prog = { '/bin/zsh' } 
 
 local function recompute_padding(window)
   local window_dims = window:get_dimensions()

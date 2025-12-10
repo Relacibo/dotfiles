@@ -1,14 +1,18 @@
 [include]
 	path = .config/delta/themes.gitconfig
+
 [user]
 	email = reinhard_bronner@t-online.de
 	name = Reinhard Bronner
 	signingkey = 0A4A7BB31FD42391
+
 [core]
-	editor = hx
+	editor = helix
 	pager = delta
+
 [commit]
 	gpgsign = true
+
 [gpg]
 	program = gpg
 [init]
@@ -24,12 +28,15 @@
 	directory = /opt/flutter
 [credential]
 	helper = store
+
 [interactive]
-	diffFilter = delta --color-only
+	diffFilter =  --color-only
+
 [delta]
-	# features = colibri
 	syntax-theme = Monokai Extended
 	navigate = true
+	dark = true      # or light = true, or omit for auto-detection
 	side-by-side = true
+
 [merge]
 	conflictStyle = zdiff3

@@ -1,15 +1,29 @@
-# If you come from bash you might have to change your $PATH.
-#export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=$HOME/.local/bin:$PATH
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# 
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Checks, if the CachyOS-specific config file exists.
+if [ -f /usr/share/cachyos-zsh-config/cachyos-config.zsh ]; then
+    source /usr/share/cachyos-zsh-config/cachyos-config.zsh
+fi
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
+
+source $ZSH/oh-my-zsh.sh
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="mytheme"
+# ZSH_THEME="robbyrussell"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -73,10 +87,7 @@ ZSH_THEME="mytheme"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(poetry git)
 
-source $ZSH/oh-my-zsh.sh
-
 # User configuration
-
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
@@ -103,14 +114,19 @@ fpath+=~/.zfunc
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-alias firefox-dev="$HOME/programs/firefox-dev/firefox"
-
 [ -f "/home/reinhard/.ghcup/env" ] && source "/home/reinhard/.ghcup/env" # ghcup-env
-export PATH="$HOME/programs/blender:$HOME/programs/flutter/bin:/home/linuxbrew/.linuxbrew/bin:$PATH:$HOME/go/bin:$HOME/programs/firefox:$(yarn global bin)"
+. "$HOME/.cargo/env"
+
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/programs/firefox:$PATH"
+export PATH="$HOME/programs/blender:$PATH"
+export PATH="$HOME/programs/flutter/bin:$PATH"
+export PATH="$HOME/go/bin:$PATH"
+export PATH="$(yarn global bin):$PATH"
+export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
 export PATH="$HOME/git/hyprmcsr/bin:$PATH"
 export PATH="$HOME/programs/ngrok:$PATH"
 export PATH="$HOME/programs/roc/:$PATH"
-export PATH="$HOME/git/roc/zig-out/bin:$PATH"
 
 export WINEDLLPATH=$WINEDLLPATH:/opt/rpc-wine/bin64:/opt/rpc-wine/bin32
 
@@ -121,15 +137,17 @@ export NVM_DIR="/home/reinhard/.nvm"
 
 export ANDROID_HOME="$HOME/.android-sdk"
 
+alias firefox-dev="$HOME/programs/firefox-dev/firefox"
 alias cp='/usr/local/bin/cpg -g'
 alias mv='/usr/local/bin/mvg -g'
+alias hx='helix'
 
 function yz() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	yazi "$@" --cwd-file="$tmp"
-	IFS= read -r -d '' cwd < "$tmp"
-	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
-	rm -f -- "$tmp"
+        local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+        yazi "$@" --cwd-file="$tmp"
+        IFS= read -r -d '' cwd < "$tmp"
+        [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+        rm -f -- "$tmp"
 }
 
 re() {
@@ -142,6 +160,6 @@ autoload -Uz compinit && compinit
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
-
+if [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]]; then
+  source "$SDKMAN_DIR/bin/sdkman-init.sh"
+fi
