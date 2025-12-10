@@ -15,8 +15,14 @@ fi
 # fi
 
 # Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
+ZSH_USER="$HOME/.oh-my-zsh"
+ZSH_SYSTEM="/usr/share/oh-my-zsh"
 
+if [ -d "$ZSH_USER" ]; then
+    export ZSH="$ZSH_USER"
+elif [ -d "$ZSH_SYSTEM" ]; then
+    export ZSH="$ZSH_SYSTEM"
+fi
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -131,9 +137,25 @@ export PATH="$HOME/programs/roc/:$PATH"
 
 export WINEDLLPATH=$WINEDLLPATH:/opt/rpc-wine/bin64:/opt/rpc-wine/bin32
 
-export NVM_DIR="/home/reinhard/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+# Pfade definieren
+NVM_SYSTEM_INIT="/usr/share/nvm/init-nvm.sh"
+NVM_USER_SCRIPT="$HOME/.nvm/nvm.sh"
 
+# --- Bedingte NVM-Initialisierung ---
+
+if [ -s "$NVM_SYSTEM_INIT" ]; then
+    # 1. Bevorzugt: Intelligente System-Initialisierung verwenden
+    source "$NVM_SYSTEM_INIT" 
+elif [ -s "$NVM_USER_SCRIPT" ]; then
+    # 2. Fallback: Manuelle Benutzer-Installation laden
+    export NVM_DIR="$HOME/.nvm"
+    . "$NVM_USER_SCRIPT" 
+    # Fügen Sie hier die Completion für die manuelle Installation hinzu
+    [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
+fi
+
+# Hinweis: Das export NVM_DIR="$HOME/.nvm" am Anfang ist hier nicht mehr nötig,
+# da beide Zweige (System und User) entweder NVM_DIR selbst setzen oder es als Basis nutzen.
 # nvm use 20
 
 export ANDROID_HOME="$HOME/.android-sdk"
