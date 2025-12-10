@@ -1,0 +1,79 @@
+[
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 44
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "Shift_L+KEY_F3+F",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 45
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "KEY_F3+F",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 46
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "KEY_F5",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 47
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "KEY_F3",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 48
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "KEY_F3+B",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 34
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "KEY_F3+g",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 102
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "set(delay, 70)\n.key(Escape)\n.wait($delay)\n.modify(Shift_L, key(KEY_TAB))\n.wait($delay)\n.key(KEY_ENTER)",
+        "mapping_type": "key_macro"
+    }
+]

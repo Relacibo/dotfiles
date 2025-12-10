@@ -1,0 +1,15 @@
+[
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 274,
+                "origin_hash": "e220b93fd6af0637078f6a77a5c94af3"
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "KEY_LEFTCTRL",
+        "name": "Button MIDDLE",
+        "mapping_type": "key_macro"
+    }
+]

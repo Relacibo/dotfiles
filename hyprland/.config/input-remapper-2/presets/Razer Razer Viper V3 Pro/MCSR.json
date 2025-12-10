@@ -1,0 +1,26 @@
+[
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 276,
+                "origin_hash": "d4f6647837f8c6b62f3f5e480a7f3584"
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "KEY_LEFTCTRL",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 275,
+                "origin_hash": "d4f6647837f8c6b62f3f5e480a7f3584"
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "KEY_F",
+        "mapping_type": "key_macro"
+    }
+]

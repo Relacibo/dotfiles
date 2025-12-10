@@ -1,0 +1,99 @@
+[
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 47,
+                "origin_hash": "ca59d710f36f94d4899606285c1fa32a"
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "KEY_F3",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 46,
+                "origin_hash": "ca59d710f36f94d4899606285c1fa32a"
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "KEY_F5",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 44,
+                "origin_hash": "ca59d710f36f94d4899606285c1fa32a"
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "c",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 62,
+                "origin_hash": "ca59d710f36f94d4899606285c1fa32a"
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "KEY_F10",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 68,
+                "origin_hash": "ca59d710f36f94d4899606285c1fa32a"
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "KEY_F4",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 30,
+                "origin_hash": "ca59d710f36f94d4899606285c1fa32a"
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "KEY_F12",
+        "name": "a",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 49,
+                "origin_hash": "ca59d710f36f94d4899606285c1fa32a"
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "KEY_F9",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 67,
+                "origin_hash": "ca59d710f36f94d4899606285c1fa32a"
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "KEY_N",
+        "mapping_type": "key_macro"
+    }
+]
