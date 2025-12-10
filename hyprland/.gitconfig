@@ -7,7 +7,7 @@
 	signingkey = 0A4A7BB31FD42391
 
 [core]
-	editor = helix
+	editor = hx
 	pager = delta
 
 [commit]
