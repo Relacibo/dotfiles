@@ -138,8 +138,6 @@ export NVM_DIR="/home/reinhard/.nvm"
 export ANDROID_HOME="$HOME/.android-sdk"
 
 alias firefox-dev="$HOME/programs/firefox-dev/firefox"
-alias cp='/usr/local/bin/cpg -g'
-alias mv='/usr/local/bin/mvg -g'
 alias hx='helix'
 
 function yz() {
