@@ -10,9 +10,9 @@ fi
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # Checks, if the CachyOS-specific config file exists.
-if [ -f /usr/share/cachyos-zsh-config/cachyos-config.zsh ]; then
-    source /usr/share/cachyos-zsh-config/cachyos-config.zsh
-fi
+# if [ -f /usr/share/cachyos-zsh-config/cachyos-config.zsh ]; then
+    # source /usr/share/cachyos-zsh-config/cachyos-config.zsh
+# fi
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
