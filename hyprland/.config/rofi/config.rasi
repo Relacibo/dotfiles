@@ -1,0 +1,9 @@
+configuration {
+font: "Noto Sans Mono 14";
+}
+
+@theme "/usr/share/rofi/themes/glue_pro_blue.rasi"
+
+window {
+	background-color: rgba (10, 12, 16, 100 %);
+}
