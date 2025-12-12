@@ -91,7 +91,9 @@ table.insert(config.keys, { key = 'k', mods = 'CTRL|SHIFT|ALT', action = act.Adj
 -- Ctrl + Shift + Alt + L: Adjust boundary Right (Grow current pane horizontally)
 table.insert(config.keys, { key = 'l', mods = 'CTRL|SHIFT|ALT', action = act.AdjustPaneSize { 'Right', 1 } })
 
-local quickselect_plugin = require 'quickselect/plugin'
+local home = wezterm.home_dir
+
+local quickselect_plugin = wezterm.plugin.require('file://' .. home .. '/.config/wezterm/quickselect')
 
 quickselect_plugin.apply_to_config(config, {
   key = 'y',
