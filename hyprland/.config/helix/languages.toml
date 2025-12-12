@@ -2,8 +2,23 @@
 name = "rust"
 language-servers = ["rust-analyzer"]
 
+formatter = { command = "rustfmt" }
+auto-format = true
+
 [language-server.rust-analyzer.config]
 check.command = "clippy"
+
+# Für C-Dateien
+[[language]]
+name = "c"
+formatter = { command = "clang-format", args = ["--style=llvm"] }
+auto-format = true
+
+# Für C++-Dateien
+[[language]]
+name = "cpp"
+formatter = { command = "clang-format", args = ["--style=llvm"] }
+auto-format = true
 
 [[language]]
 name = "toml"

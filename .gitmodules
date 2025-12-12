@@ -1,0 +1,4 @@
+[submodule "hyprland/.config/wezterm/quickselect"]
+	path = hyprland/.config/wezterm/quickselect
+	url = git@github.com:Relacibo/quickselect.wezterm.git
+	branch = main2

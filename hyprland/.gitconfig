@@ -29,8 +29,8 @@
 [credential]
 	helper = store
 
-[interactive]
-	diffFilter =  --color-only
+# [interactive]
+# 	diffFilter =  --color-only
 
 [delta]
 	syntax-theme = Monokai Extended

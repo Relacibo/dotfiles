@@ -161,10 +161,6 @@ fi
 export ANDROID_HOME="$HOME/.android-sdk"
 
 alias firefox-dev="$HOME/programs/firefox-dev/firefox"
-if command -v helix > /dev/null; then
-    # Wenn 'helix' gefunden wird, Alias setzen
-    alias hx='helix'
-fi
 
 function yz() {
         local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd

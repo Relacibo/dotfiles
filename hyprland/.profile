@@ -1,4 +1,3 @@
-. "$HOME/.cargo/env"
 
 export PATH="$HOME/.poetry/bin:$PATH"
 export PATH=""$HOME/programs/flutter/bin:$PATH"
@@ -11,7 +10,4 @@ alias chamberprod='aws-vault exec production -- chamber'
 export ANDROID_HOME="$HOME/.android-sdk"
 export GODOT4_BIN=$(which godot)
 export HSA_OVERRIDE_GFX_VERSION=10.3.0
-if command -v helix > /dev/null; then
-    # Wenn 'helix' gefunden wird, Alias setzen
-    alias hx='helix'
-fi
+. "$HOME/.cargo/env"

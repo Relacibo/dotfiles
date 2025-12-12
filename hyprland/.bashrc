@@ -36,22 +36,17 @@ alias firefox-dev="$HOME/programs/firefox-dev/firefox"
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
 PS1='[\u@\h \W]\$ '
-. "$HOME/.cargo/env"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-if command -v helix > /dev/null; then
-    # Wenn 'helix' gefunden wird, Alias setzen
-    alias hx='helix'
-fi
 
 export PATH="$HOME/programs/blender:$PATH"
 export PATH="$HOME/git/hyprmcsr/bin:$PATH"
 export PATH="$HOME/programs/roc/:$PATH"
 export PATH="$HOME/git/roc/zig-out/bin:$PATH"
 
+. "$HOME/.cargo/env"
 source /home/reinhard/git/hyprmcsr/tab-completions/hyprmcsr.bash-completion
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
