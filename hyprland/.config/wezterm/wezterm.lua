@@ -97,7 +97,8 @@ local quickselect_plugin = wezterm.plugin.require('file://' .. home .. '/.config
 
 quickselect_plugin.apply_to_config(config, {
   key = 'y',
-  mods = 'ALT|SHIFT'
+  mods = 'ALT|SHIFT',
+  size = { Percent = 75 },
 })
 
 return config
