@@ -58,8 +58,8 @@
       "enabled": true
     },
     "prismLauncher": {
-      "wrapperCommand": {
-        "autoReplace": true
+      "autoReplaceWrapperCommand": {
+        "enabled": true
       },
       "instanceId": "1.16.1",
       "autoLaunch": true
