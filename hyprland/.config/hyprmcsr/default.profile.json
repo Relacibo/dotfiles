@@ -27,7 +27,7 @@
   },
   "modeSwitch": {
     "default": {
-      "size": "1920x1080",
+      "size": "fullscreen",
       "sensitivity": "-0.9"
     },
     "modes": {
@@ -59,7 +59,8 @@
     },
     "prismLauncher": {
       "autoReplaceWrapperCommand": {
-        "enabled": true
+        "enabled": true,
+        "innerCommand": "obs-gamecapture"
       },
       "instanceId": "1.16.1",
       "autoLaunch": true

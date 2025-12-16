@@ -5,6 +5,7 @@
   "theme": "auto",
   "trusted_folders": [
     "/home/reinhard/git/hyprmcsr",
-    "/home/reinhard/git/aoc/2025"
+    "/home/reinhard/git/aoc/2025",
+    "/home/reinhard/.dotfiles/hyprland/.config/wezterm"
   ]
 }
