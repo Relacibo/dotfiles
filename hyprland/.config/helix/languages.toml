@@ -1,4 +1,17 @@
 [[language]]
+name = "bash"
+
+[language-server.bash-language-server]
+command = "node"
+
+args = [
+  "/usr/lib/node_modules_22/bash-language-server/server/out/cli.js",
+  "start",                                                           # Der Bash-LSP benötigt den "start" Argument
+]
+
+auto-format = true
+
+[[language]]
 name = "rust"
 language-servers = ["rust-analyzer"]
 
