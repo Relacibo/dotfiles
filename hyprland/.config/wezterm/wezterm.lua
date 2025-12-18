@@ -9,11 +9,11 @@ config.enable_tab_bar = true
 -- ...but only if multiple tabs exist
 config.hide_tab_bar_if_only_one_tab = true
 
-config.colors = {
-  background = "#0a0c10"
-}
+-- config.colors = {
+--   background = "#0a0c10"
+-- }
 
-config.default_prog = { '/bin/zsh' } 
+config.default_prog = { '/bin/zsh' }
 
 local function recompute_padding(window)
   local window_dims = window:get_dimensions()
@@ -59,7 +59,8 @@ config.keys = config.keys or {}
 table.insert(config.keys, { key = 's', mods = 'SHIFT|ALT', action = act.SplitVertical { domain = 'CurrentPaneDomain' } })
 
 -- Shift + Alt + S: Horizontal Split
-table.insert(config.keys, { key = 'v', mods = 'SHIFT|ALT', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } })
+table.insert(config.keys,
+  { key = 'v', mods = 'SHIFT|ALT', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } })
 
 -- Shift + Alt + H: Activate Pane Left
 table.insert(config.keys, { key = 'h', mods = 'SHIFT|ALT', action = act.ActivatePaneDirection('Left') })
@@ -91,13 +92,100 @@ table.insert(config.keys, { key = 'k', mods = 'CTRL|SHIFT|ALT', action = act.Adj
 -- Ctrl + Shift + Alt + L: Adjust boundary Right (Grow current pane horizontally)
 table.insert(config.keys, { key = 'l', mods = 'CTRL|SHIFT|ALT', action = act.AdjustPaneSize { 'Right', 1 } })
 
-local home = wezterm.home_dir
+table.insert(config.keys, { key = 'R', mods = 'SHIFT|ALT', action = act.ReloadConfiguration })
 
-local quickselect_plugin = wezterm.plugin.require('file://' .. home .. '/.config/wezterm/quickselect')
+-- local home = wezterm.home_dir
+
+-- local plugin_dir = wezterm.config_dir .. '/quickselect'
+-- wezterm.add_to_config_reload_watch_list(plugin_dir .. '/plugin/init.lua')
+local quickselect_plugin = require('quickselect/plugin')
 
 quickselect_plugin.apply_to_config(config, {
   key = 'y',
-  mods = 'ALT|SHIFT'
+  mods = 'ALT|SHIFT',
+  size = { Percent = 75 },
+  extensions = {
+    md = true,
+    c = true,
+    h = true,
+    go = true,
+    scm = true,
+    rkt = true,
+    rs = true,
+    java = true,
+  },
+  patterns = {
+    "https?://\\S+",
+    "^/[^/\r\n]+(?:/[^/\r\n]+)*:\\d+:\\d+",
+    "[^\\s]+\\.rs:\\d+:\\d+",
+    "rustc --explain E\\d+",
+    "Generated ([^\\s]+/target/doc/[^\\s]+/index\\.html)",
+    "[^\\s]+\\.go:\\d+",
+    "[^\\s]+\\.go:\\d+:\\d+",
+    "[^\\s]+\\.[ch]:\\d+:\\d+",
+    "[^\\s]+\\.java:\\[\\d+,\\d+\\]",
+    "[^{]*{.*}",
+  },
+  actions = {
+    {
+      filter = quickselect_plugin.filters.startswith("http"),
+      action = function(_, _, selection, _)
+        wezterm.open_with(selection)
+      end,
+    },
+    {
+      filter = quickselect_plugin.filters.startswith("rustc --explain"),
+      action = function(window, pane, selection, _)
+        local code = selection:match("(%S+)$")
+        window:perform_action(
+          act.SplitPane({
+            direction = "Right",
+            command = {
+              args = {
+                "/bin/sh",
+                "-c",
+                "rustc --explain " .. code .. " | mdcat -p",
+              },
+            },
+          }),
+          pane
+        )
+      end,
+    },
+    {
+      filter = quickselect_plugin.filters.match("[^\\s]+/target/doc/[^\\s]+/index\\.html"),
+      action = function(_, _, selection, _)
+        wezterm.open_with(selection, "firefox")
+        return true
+      end,
+    },
+    {
+      filter = quickselect_plugin.filters.match("[^{]*{.*}"),
+      action = function(window, pane, selection, _)
+        local json = selection:match("{.*}")
+        local cmd = "echo '" .. json .. "' | jq -C . | less -R"
+        window:perform_action(
+          act.SplitPane({
+            direction = "Right",
+            command = { args = { "/bin/sh", "-c", cmd } },
+          }),
+          pane
+        )
+      end,
+    },
+    {
+      filter = quickselect_plugin.filters.match("[^:%s]+%.java):%[(%d+),%d+%]"),
+      action = function(window, pane, selection, opts)
+        local file, line = selection:match("([^:%s]+%.java):%[(%d+),%d+%]")
+        if file and line then
+          selection = "$EDITOR:" .. file .. ":" .. line
+        else
+          selection = "$EDITOR:" .. selection
+        end
+        return quickselect_plugin.open_with_hx(window, pane, selection, opts)
+      end,
+    },
+  }
 })
 
 return config

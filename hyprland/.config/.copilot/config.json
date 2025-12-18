@@ -1,0 +1,11 @@
+{
+  "banner": "never",
+  "render_markdown": true,
+  "screen_reader": false,
+  "theme": "auto",
+  "trusted_folders": [
+    "/home/reinhard/git/hyprmcsr",
+    "/home/reinhard/git/aoc/2025",
+    "/home/reinhard/.dotfiles/hyprland/.config/wezterm"
+  ]
+}

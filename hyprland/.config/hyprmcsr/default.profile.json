@@ -8,7 +8,6 @@
     "$HYPRMCSR run-jar Ninjabrain-Bot",
     "# obs",
     "input-remapper-control --command start --device \"Razer Razer Viper V3 Pro\" --preset \"MCSR\"",
-    "prismlauncher -l \"1.16.1\"",
     "sudo input-remapper-control --command start --device \"Ducky Ducky One 3 TKL \" --preset \"MCSR\"",
     "~/.local/bin/razer-cli --dpi 14400",
     "hyprctl keyword input:sensitivity -0.9"
@@ -28,7 +27,7 @@
   },
   "modeSwitch": {
     "default": {
-      "size": "1920x1080",
+      "size": "fullscreen",
       "sensitivity": "-0.9"
     },
     "modes": {
@@ -55,15 +54,16 @@
   },
   "minecraft": {
     "windowTitleRegex": "Minecraft",
-    "observeLog": {
+    "observeState": {
       "enabled": true
     },
-    "prismWrapperCommand": {
-      "autoReplace": true,
-      "prismMinecraftInstanceIds": [
-        "1.16.1"
-      ],
-      "innerCommand": "obs-gamecapture"
+    "prismLauncher": {
+      "autoReplaceWrapperCommand": {
+        "enabled": true,
+        "innerCommand": "obs-gamecapture"
+      },
+      "instanceId": "1.16.1",
+      "autoLaunch": true
     }
   }
 }
