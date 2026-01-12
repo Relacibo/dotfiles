@@ -15,6 +15,7 @@ fi
 # fi
 
 # Path to your oh-my-zsh installation.
+ZSH_CUSTOM="$HOME/.config/oh-my-zsh"
 ZSH_USER="$HOME/.oh-my-zsh"
 ZSH_SYSTEM="/usr/share/oh-my-zsh"
 
