@@ -19,7 +19,7 @@ edit = [
   { desc = 'VSCode', run = 'code $@', block = false, ophan = true },
 ]
 
-pdf = [{ run = 'masterpdfeditor5 $@', oprhan = true, block = false }]
+pdf = [{ run = 'zathura $@', orphan = true, block = false }]
 
 [open]
 prepend_rules = [

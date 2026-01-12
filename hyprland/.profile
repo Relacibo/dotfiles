@@ -1,6 +1,6 @@
 
 export PATH="$HOME/.poetry/bin:$PATH"
-export PATH=""$HOME/programs/flutter/bin:$PATH"
+export PATH="$HOME/programs/flutter/bin:$PATH"
 export PATH="$HOME/programs/zig/:/opt/postman/Postman/:$HOME/go/bin:$PATH"
 export PATH="$PATH:$HOME/.local/share/JetBrains/Toolbox/scripts"
 

@@ -14,10 +14,6 @@ name = "c"
 formatter = { command = "clang-format", args = ["--style=llvm"] }
 indent = { tab-width = 2, unit = " "}
 auto-format = true
-language-servers = ["clangd"]
-
-[language-server.clangd.config]
-arguments = ["--std=c23"]
 
 # Für C++-Dateien
 [[language]]

@@ -59,8 +59,7 @@
     },
     "prismLauncher": {
       "autoReplaceWrapperCommand": {
-        "enabled": true,
-        "innerCommand": "obs-gamecapture"
+        "enabled": true
       },
       "instanceId": "1.16.1",
       "autoLaunch": true
