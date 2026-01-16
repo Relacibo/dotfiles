@@ -80,3 +80,19 @@ formatter = { command = "roc", args = ["format", "--stdin", "--stdout"] }
 
 name = "roc"
 source = { git = "https://github.com/faldor20/tree-sitter-roc.git", rev = "master" }
+
+[[language]]
+name = "typescript"
+auto-format = true
+
+[[language]]
+name = "tsx"
+auto-format = true
+
+[[language]]
+name = "javascript"
+auto-format = true
+
+[[language]]
+name = "jsx"
+auto-format = true
