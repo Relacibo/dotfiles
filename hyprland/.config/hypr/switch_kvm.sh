@@ -32,5 +32,5 @@ else
 fi
 
 # Führe den eigentlichen Befehl aus
-notify-send "KVM Switch" "Wechsle zu Ziel: $KVM_TARGET..."
+# notify-send "KVM Switch" "Wechsle zu Ziel: $KVM_TARGET..."
 ddcutil setvcp 60 "$KVM_TARGET" -d "$DELL_DISPLAY_ID"
