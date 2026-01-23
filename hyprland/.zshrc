@@ -176,6 +176,20 @@ re() {
     [ -n "$result" ] && cd -- "$result"
 }
 
+# Cargo Less (cl) - Die wirklich einfache und flexible Version
+cl() {
+  # Nimm das erste Argument als Befehl, oder 'check' als Standard.
+  local subcommand=${1:-check}
+  
+  # Das erste Argument (der Befehl) aus der Liste der Argumente entfernen,
+  # die an Cargo weitergegeben werden.
+  if [[ $# -gt 0 ]]; then
+    shift
+  fi
+
+  RUST_BACKTRACE=1 cargo "$subcommand" --color=always "$@" 2>&1 | less -RFS
+}
+
 fpath=(/home/reinhard/git/hyprmcsr/tab-completions $fpath)
 autoload -Uz compinit && compinit
 
