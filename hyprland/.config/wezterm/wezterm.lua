@@ -135,7 +135,7 @@ quickselect_plugin.apply_to_config(config, {
     java = true,
   },
   patterns = {
-    "https?://\\S+",
+    "https?://[^`\'\"\\)\\s]+",
     "^/[^/\r\n]+(?:/[^/\r\n]+)*:\\d+:\\d+",
     "[^\\s]+\\.rs:\\d+:\\d+",
     "rustc --explain E\\d+",
@@ -144,9 +144,18 @@ quickselect_plugin.apply_to_config(config, {
     "[^\\s]+\\.go:\\d+:\\d+",
     "[^\\s]+\\.[ch]:\\d+:\\d+",
     "[^\\s]+\\.java:\\[\\d+,\\d+\\]",
-    "[^{]*{.*}",
+    -- "[^{]*{.*}",
   },
   actions = {
+    {
+      filter = function(selection)
+        return selection:match("/target/doc/[^/]+/index%.html") ~= nil
+      end,
+      action = function(window, _, selection, _)
+        wezterm.open_with("file://" .. selection)
+        return true
+      end,
+    },
     {
       filter = quickselect_plugin.filters.startswith("http"),
       action = function(_, _, selection, _)
@@ -159,12 +168,12 @@ quickselect_plugin.apply_to_config(config, {
         local code = selection:match("(%S+)$")
         window:perform_action(
           act.SplitPane({
-            direction = "Right",
+            direction = "Down",
             command = {
               args = {
                 "/bin/sh",
                 "-c",
-                "rustc --explain " .. code .. " | mdcat -p",
+                "rustc --explain " .. code .. " | md-tui",
               },
             },
           }),
@@ -172,27 +181,20 @@ quickselect_plugin.apply_to_config(config, {
         )
       end,
     },
-    {
-      filter = quickselect_plugin.filters.match("[^\\s]+/target/doc/[^\\s]+/index\\.html"),
-      action = function(_, _, selection, _)
-        wezterm.open_with(selection, "firefox")
-        return true
-      end,
-    },
-    {
-      filter = quickselect_plugin.filters.match("[^{]*{.*}"),
-      action = function(window, pane, selection, _)
-        local json = selection:match("{.*}")
-        local cmd = "echo '" .. json .. "' | jq -C . | less -R"
-        window:perform_action(
-          act.SplitPane({
-            direction = "Right",
-            command = { args = { "/bin/sh", "-c", cmd } },
-          }),
-          pane
-        )
-      end,
-    },
+    -- {
+    --   filter = quickselect_plugin.filters.match("[^{]*{.*}"),
+    --   action = function(window, pane, selection, _)
+    --     local json = selection:match("{.*}")
+    --     local cmd = "echo '" .. json .. "' | jq -C . | less -R"
+    --     window:perform_action(
+    --       act.SplitPane({
+    --         direction = "Right",
+    --         command = { args = { "/bin/sh", "-c", cmd } },
+    --       }),
+    --       pane
+    --     )
+    --   end,
+    -- },
     {
       filter = quickselect_plugin.filters.match("[^:%s]+%.java):%[(%d+),%d+%]"),
       action = function(window, pane, selection, opts)

@@ -15,7 +15,7 @@ auto-format = true
 name = "rust"
 language-servers = ["rust-analyzer"]
 
-formatter = { command = "rustfmt" }
+formatter = { command = "rustfmt --config edition=\"2024\"" }
 auto-format = true
 
 [language-server.rust-analyzer.config]
@@ -25,14 +25,14 @@ check.command = "clippy"
 [[language]]
 name = "c"
 formatter = { command = "clang-format", args = ["--style=llvm"] }
-indent = { tab-width = 2, unit = " "}
+indent = { tab-width = 2, unit = " " }
 auto-format = true
 
 # Für C++-Dateien
 [[language]]
 name = "cpp"
 formatter = { command = "clang-format", args = ["--style=llvm"] }
-indent = { tab-width = 2, unit = " "}
+indent = { tab-width = 2, unit = " " }
 auto-format = true
 
 [[language]]
