@@ -327,6 +327,7 @@ label:focus {
 }
 
 #custom-dunst {
+  margin: 0 2px;
   padding: 0 4px;
 }
 

@@ -41,7 +41,7 @@ elif [ "$TOTAL_COUNT" -gt 0 ]; then
 else
     TEXT="\uf0f3 $TOTAL_COUNT" # Normale Glocke + Gesamtzahl (0)
     CLASS="no-notifications"
-    TOOLTIP="Keine Benachrichtigungen. Gesamt: $TOTAL_COUNT (Angezeigt: $DISPLAYED_COUNT, Wartend: $WAITING_COUNT, Verlauf: $HISTORY_COUNT)"
+    TOOLTIP="Gesamt: $TOTAL_COUNT (Angezeigt: $DISPLAYED_COUNT, Wartend: $WAITING_COUNT, Verlauf: $HISTORY_COUNT)"
 fi
 
 # Final JSON output

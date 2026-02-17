@@ -239,9 +239,7 @@
     "interval": 1,
     "exec": "$HOME/.config/waybar/scripts/dunst-notifications.sh",
     "on-click": "bash -c '$HOME/.config/waybar/scripts/dunst-history-menu.sh'",
-    "on-click-right": "bash -c '/usr/bin/dunstctl history-clear'",
     "on-click-middle": "bash -c '/usr/bin/dunstctl set-paused toggle'"
-    // "tooltip-format": "{tooltip}"
   }
   //"custom/synced-timer-rs": {
   //	"tooltip": false,
