@@ -40,9 +40,12 @@ log "History: $NOTIF_COUNT, Angezeigt: $DISPLAYED_COUNT, Wartend: $WAITING_COUNT
             body_disp=$(echo "$body" | head -c 50)
             [ ${#body} -gt 50 ] && body_disp="${body_disp}"
             
-            # Konvertiere Timestamp (Mikrosekunden) zu lesbarem Format
-            timestamp_sec=$((timestamp / 1000000))
-            time_str=$(date -d "@$timestamp_sec" +"%H:%M" 2>/dev/null || echo "")
+            # Konvertiere Timestamp (Mikrosekunden seit Boot) zu Uhrzeit
+            uptime_sec=$(awk '{print int($1)}' /proc/uptime)
+            current_time=$(date +%s)
+            boot_time=$((current_time - uptime_sec))
+            notification_time=$((boot_time + timestamp / 1000000))
+            time_str=$(date -d "@$notification_time" +"%H:%M" 2>/dev/null || echo "")
             
             # Format: [Zeit] App Summary (Body klein)
             if [ -n "$body_disp" ]; then
