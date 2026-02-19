@@ -10,7 +10,10 @@ ROFI="/usr/bin/rofi"
 TMPFILE=$(mktemp)
 trap "rm -f $TMPFILE" EXIT
 
-log "=== Menu gestartet ==="
+# Parameter für Select-Index (wird beim Reopen übergeben)
+SELECTED_INDEX=${1:-0}
+
+log "=== Menu gestartet (Index: $SELECTED_INDEX) ==="
 
 # Hole alle Benachrichtigungen
 HISTORY_JSON=$($DUNSTCTL history --json 2>/dev/null)
@@ -19,6 +22,12 @@ DISPLAYED_COUNT=$($DUNSTCTL count displayed 2>/dev/null)
 WAITING_COUNT=$($DUNSTCTL count waiting 2>/dev/null)
 
 log "History: $NOTIF_COUNT, Angezeigt: $DISPLAYED_COUNT, Wartend: $WAITING_COUNT"
+
+# Beende wenn keine Benachrichtigungen vorhanden sind
+if [ "$NOTIF_COUNT" = "0" ] || [ -z "$NOTIF_COUNT" ]; then
+    log "Keine Benachrichtigungen vorhanden, beende"
+    exit 0
+fi
 
 # Baue Menü mit besserer Formatierung
 {
@@ -70,6 +79,7 @@ SELECTION=$(awk -F'|' '{
     -format 'i' \
     -show-icons \
     -markup-rows \
+    -selected-row "$SELECTED_INDEX" \
     -mesg "Enter=Anzeigen • Alt+d=Löschen • Alt+Shift+d=Alle löschen" \
     -kb-custom-1 "Alt+d" \
     -kb-custom-2 "Alt+Shift+d")
@@ -92,9 +102,11 @@ case "$EXIT_CODE" in
         $DUNSTCTL history-clear
         ;;
     10)
-        # Alt+d = Einzelne löschen
-        log "Lösche Benachrichtigung $ID"
+        # Alt+d = Einzelne löschen und Menu neu öffnen
+        log "Lösche Benachrichtigung $ID und öffne neu"
         $DUNSTCTL history-rm "$ID"
+        # Menu wird automatisch beendet wenn leer (siehe Check am Anfang)
+        exec "$0" "$SELECTION"
         ;;
     0)
         # Enter = Anzeigen
