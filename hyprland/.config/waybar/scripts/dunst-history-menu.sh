@@ -80,9 +80,9 @@ SELECTION=$(awk -F'|' '{
     -show-icons \
     -markup-rows \
     -selected-row "$SELECTED_INDEX" \
-    -mesg "Enter=Anzeigen • Alt+d=Löschen • Alt+Shift+d=Alle löschen" \
+    -mesg "Enter=Anzeigen • Alt+d=Löschen • Alt+x=Alle löschen" \
     -kb-custom-1 "Alt+d" \
-    -kb-custom-2 "Alt+Shift+d")
+    -kb-custom-2 "Alt+x")
 
 EXIT_CODE=$?
 log "Rofi exit code: $EXIT_CODE, Index: $SELECTION"
