@@ -2,9 +2,9 @@
   "IS_MAXIMIZED": false,
   "IS_MINIMIZED": false,
   "WINDOW_BOUNDS": {
-    "x": 22,
+    "x": 967,
     "y": 52,
-    "width": 1876,
+    "width": 940,
     "height": 1006
   },
   "MINIMIZE_TO_TRAY": false,
@@ -14,5 +14,6 @@
   "chromiumSwitches": {},
   "BACKGROUND_COLOR": "#121214",
   "offloadAdmControls": true,
-  "asyncVideoInputDeviceInit": false
+  "asyncVideoInputDeviceInit": false,
+  "openH264Enabled": true
 }

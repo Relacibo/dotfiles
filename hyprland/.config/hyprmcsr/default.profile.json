@@ -9,12 +9,12 @@
     "# obs",
     "input-remapper-control --command start --device \"Razer Razer Viper V3 Pro\" --preset \"MCSR\"",
     "sudo input-remapper-control --command start --device \"Ducky Ducky One 3 TKL \" --preset \"MCSR\"",
-    "~/.local/bin/razer-cli --dpi 14400",
+    "razer-cli --dpi 14400",
     "hyprctl keyword input:sensitivity -0.9"
   ],
   "onDestroy": [
     "sudo input-remapper-control --command stop-all",
-    "~/.local/bin/razer-cli --dpi 1800",
+    "razer-cli --dpi 1800",
     "hyprctl keyword input:sensitivity 0.0"
   ],
   "binds": {
@@ -40,11 +40,11 @@
         "sensitivity": "-0.96875",
         "onEnter": [
           "~/.local/bin/obs-cli item show --scene 'MCSR VK-Capture BoatEye' 'Spielaufnahme 2'",
-          "~/.local/bin/razer-cli --dpi 100"
+          "razer-cli --dpi 100"
         ],
         "onExit": [
           "~/.local/bin/obs-cli item hide --scene  'MCSR VK-Capture BoatEye' 'Spielaufnahme 2'",
-          "~/.local/bin/razer-cli --dpi 14400"
+          "razer-cli --dpi 14400"
         ]
       },
       "planar-abuse": {
@@ -58,11 +58,12 @@
       "enabled": true
     },
     "prismLauncher": {
+      "flatpak": true,
       "autoReplaceWrapperCommand": {
         "enabled": true
       },
       "instanceId": "1.16.1",
       "autoLaunch": true
-    }
+      }
   }
 }
