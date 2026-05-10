@@ -84,15 +84,35 @@ source = { git = "https://github.com/faldor20/tree-sitter-roc.git", rev = "maste
 [[language]]
 name = "typescript"
 auto-format = true
+formatter = { command = 'prettier', args = [
+  "--stdin-filepath",
+  "{file}",
+  "--single-quote",
+] }
 
 [[language]]
 name = "tsx"
 auto-format = true
+formatter = { command = 'prettier', args = [
+  "--stdin-filepath",
+  "{file}",
+  "--single-quote",
+] }
 
 [[language]]
 name = "javascript"
 auto-format = true
+formatter = { command = 'prettier', args = [
+  "--stdin-filepath",
+  "{file}",
+  "--single-quote",
+] }
 
 [[language]]
 name = "jsx"
 auto-format = true
+formatter = { command = 'prettier', args = [
+  "--stdin-filepath",
+  "{file}",
+  "--single-quote",
+] }
