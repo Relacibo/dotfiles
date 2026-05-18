@@ -1,0 +1,39 @@
+[
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 46,
+                "origin_hash": "b3c0f4d3f4a38edaf2fe2d65a00e2589"
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "KEY_F5",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 30,
+                "origin_hash": "b3c0f4d3f4a38edaf2fe2d65a00e2589"
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "KEY_F6",
+        "mapping_type": "key_macro"
+    },
+    {
+        "input_combination": [
+            {
+                "type": 1,
+                "code": 47,
+                "origin_hash": "b3c0f4d3f4a38edaf2fe2d65a00e2589"
+            }
+        ],
+        "target_uinput": "keyboard",
+        "output_symbol": "KEY_F3",
+        "name": "v",
+        "mapping_type": "key_macro"
+    }
+]

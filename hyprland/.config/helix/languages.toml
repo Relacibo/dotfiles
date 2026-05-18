@@ -84,35 +84,25 @@ source = { git = "https://github.com/faldor20/tree-sitter-roc.git", rev = "maste
 [[language]]
 name = "typescript"
 auto-format = true
-formatter = { command = 'prettier', args = [
-  "--stdin-filepath",
-  "{file}",
-  "--single-quote",
-] }
 
 [[language]]
 name = "tsx"
 auto-format = true
-formatter = { command = 'prettier', args = [
-  "--stdin-filepath",
-  "{file}",
-  "--single-quote",
-] }
 
 [[language]]
 name = "javascript"
 auto-format = true
-formatter = { command = 'prettier', args = [
-  "--stdin-filepath",
-  "{file}",
-  "--single-quote",
-] }
 
 [[language]]
 name = "jsx"
 auto-format = true
-formatter = { command = 'prettier', args = [
-  "--stdin-filepath",
-  "{file}",
-  "--single-quote",
-] }
+[[language]]
+name = "java"
+language-servers = ["jdtls"]
+# Wir nutzen google-java-format im AOSP-Style (4 Spaces statt 2), 
+# falls du 2 Spaces bevorzugst, entferne das "--aosp" Argument.
+formatter = { command = "google-java-format", args = ["--aosp", "-"] }
+auto-format = true
+
+[language-server.jdtls]
+command = "jdtls"

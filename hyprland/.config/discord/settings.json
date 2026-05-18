@@ -5,7 +5,7 @@
     "x": 1286,
     "y": 57,
     "width": 1264,
-    "height": 1532
+    "height": 1533
   },
   "MINIMIZE_TO_TRAY": false,
   "OPEN_ON_STARTUP": false,
@@ -14,5 +14,7 @@
   "chromiumSwitches": {},
   "BACKGROUND_COLOR": "#121214",
   "offloadAdmControls": true,
-  "asyncVideoInputDeviceInit": false
+  "asyncVideoInputDeviceInit": false,
+  "enableLibOpenH264Electron": true,
+  "openH264Enabled": true
 }
