@@ -33,6 +33,7 @@
 # 	diffFilter =  --color-only
 
 [delta]
+	paging = always
 	syntax-theme = Monokai Extended
 	navigate = true
 	dark = true      # or light = true, or omit for auto-detection
@@ -40,3 +41,5 @@
 
 [merge]
 	conflictStyle = zdiff3
+
+

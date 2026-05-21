@@ -9,6 +9,7 @@
     "# obs",
     "input-remapper-control --command start --device \"Razer Razer Viper V3 Pro\" --preset \"MCSR\"",
     "sudo input-remapper-control --command start --device \"Ducky Ducky One 3 TKL \" --preset \"MCSR\"",
+    "sudo input-remapper-control --command start --device \"AT Translated Set 2 keyboard\" --preset \"MCSR\"",
     "razer-cli --dpi 14400",
     "hyprctl keyword input:sensitivity -0.9"
   ],
