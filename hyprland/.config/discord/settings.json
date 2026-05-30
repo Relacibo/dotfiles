@@ -2,10 +2,10 @@
   "IS_MAXIMIZED": false,
   "IS_MINIMIZED": false,
   "WINDOW_BOUNDS": {
-    "x": 967,
-    "y": 52,
-    "width": 931,
-    "height": 1006
+    "x": 3208,
+    "y": 65,
+    "width": 1244,
+    "height": 1348
   },
   "MINIMIZE_TO_TRAY": false,
   "OPEN_ON_STARTUP": false,
@@ -15,5 +15,6 @@
   "BACKGROUND_COLOR": "#121214",
   "offloadAdmControls": true,
   "asyncVideoInputDeviceInit": false,
-  "openH264Enabled": true
+  "openH264Enabled": true,
+  "DESKTOP_TTI_UPDATE_BACKOFF_MAX_MS": 20000
 }
