@@ -2,10 +2,10 @@
   "IS_MAXIMIZED": false,
   "IS_MINIMIZED": false,
   "WINDOW_BOUNDS": {
-    "x": 3208,
-    "y": 65,
-    "width": 1244,
-    "height": 1348
+    "x": 22,
+    "y": 52,
+    "width": 1876,
+    "height": 1006
   },
   "MINIMIZE_TO_TRAY": false,
   "OPEN_ON_STARTUP": false,
@@ -16,5 +16,9 @@
   "offloadAdmControls": true,
   "asyncVideoInputDeviceInit": false,
   "openH264Enabled": true,
-  "DESKTOP_TTI_UPDATE_BACKOFF_MAX_MS": 20000
+  "DESKTOP_TTI_UPDATE_BACKOFF_MAX_MS": 20000,
+  "DESKTOP_TTI_DNSTCP_WARMUP": true,
+  "DESKTOP_TTI_EARLY_UPDATE_CHECK": true,
+  "DESKTOP_TTI_HTTP_CDT": true,
+  "DESKTOP_TTI_REMOVE_V8_CACHE_CLEAR": true
 }

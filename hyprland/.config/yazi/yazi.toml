@@ -25,7 +25,7 @@ pdf = [{ run = 'zathura $@', orphan = true, block = false }]
 prepend_rules = [
   # { mime = "audio/*", use = "play" },
   { mime = "image/*", use = "image" },
-  { name = "*.csv", use = "table" },
-  { name = "*.md", use = "markdown" },
+  # { name = "*.csv", use = "table" },
+  # { name = "*.md", use = "markdown" },
 ]
-append_rules = [{ name = "*.pdf", use = "pdf" }]
+# append_rules = [{ name = "*.pdf", use = "pdf" }]
