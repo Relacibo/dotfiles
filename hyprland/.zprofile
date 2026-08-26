@@ -9,3 +9,7 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
    ssh-add $HOME/.ssh/id_rsa 2> /dev/null
 fi
 
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/reinhard/.local/bin:$PATH"

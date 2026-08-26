@@ -27,4 +27,4 @@ if [ -d "$doc_root/fonts" ]; then
 fi
 
 mkdir -p "$rendered_dir"
-typst compile "${font_args[@]}" "$doc_root/src/main.typ" "$rendered_dir/main.pdf" "$@"
+typst compile --root "$doc_root" "${font_args[@]}" "$doc_root/src/main.typ" "$rendered_dir/main.pdf" "$@"

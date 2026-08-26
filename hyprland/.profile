@@ -11,3 +11,7 @@ export ANDROID_HOME="$HOME/.android-sdk"
 export GODOT4_BIN=$(which godot)
 export HSA_OVERRIDE_GFX_VERSION=10.3.0
 . "$HOME/.cargo/env"
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/reinhard/.local/bin:$PATH"

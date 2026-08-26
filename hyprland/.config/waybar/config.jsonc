@@ -107,9 +107,24 @@
     "spacing": 10
   },
   "clock": {
+    "locale": "de_DE.UTF-8",
     // "timezone": "America/New_York",
     "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-    "format-alt": "{:%Y-%m-%d}"
+    "format": "{:%H:%M}",
+    "format-alt": "{:%d.%m.%Y}",
+    "calendar": {
+        "mode"          : "month",
+        "weeks-pos"     : "right",
+        "on-scroll"     : 1,
+        "format": {
+            "months":     "<span color='#ffead3'><b>{}</b></span>",
+            "days":       "<span color='#ecc6d9'><b>{}</b></span>",
+            "weeks":      "<span color='#99ffdd'><b>W{}</b></span>",
+            "weekdays":   "<span color='#ffcc66'><b>{}</b></span>",
+            // Hier wird der heutige Tag hervorgehoben:
+            "today":      "<span background='#ff5555' color='#1e1e2e'><b><u>{}</u></b></span>"
+        }
+    }
   },
   "cpu": {
     "format": "{usage}% ",

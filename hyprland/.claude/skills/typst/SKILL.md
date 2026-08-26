@@ -100,10 +100,10 @@ Never `git init` inside `fonts/` (binary assets, not iterated on) or `rendered/`
 Local-only git has no off-machine copy. Once the user has opted in (above), every commit gets pushed immediately, unconditionally — not batched up, not asked again per-commit. Back up every opted-in global-scope repo (`sources/<doc-slug>/` and `templates/`) to a bare repo on the `ovilava.rcbnetwork.de` SSH host (also reachable via the shorter `ovilava` alias in `~/.ssh/config`, but remotes are named with the full hostname; key-based auth already works, confirmed reachable):
 
 ```
-~/.claude/skills/typst/scripts/git-backup.sh <local-repo-dir> <remote-relative-path>
-# e.g.
-~/.claude/skills/typst/scripts/git-backup.sh "$(xdg-user-dir DOCUMENTS)/typst/sources/<slug>" "sources/<slug>"
-~/.claude/skills/typst/scripts/git-backup.sh "$(xdg-user-dir DOCUMENTS)/typst/templates" "templates"
+~/.gemini/config/skills/typst/scripts/git-backup.sh <local-repo-dir> <remote-relative-path>
+# e.g. (or use ~/.config/opencode/skills/typst/scripts/... if using OpenCode / DeepSeek)
+~/.gemini/config/skills/typst/scripts/git-backup.sh "$(xdg-user-dir DOCUMENTS)/typst/sources/<slug>" "sources/<slug>"
+~/.gemini/config/skills/typst/scripts/git-backup.sh "$(xdg-user-dir DOCUMENTS)/typst/templates" "templates"
 ```
 
 It creates `/mnt/data/git/typst/<remote-relative-path>.git` as a bare repo on `ovilava.rcbnetwork.de` if missing, wires it up as `origin` if not already set, and pushes all branches — idempotent, safe to call after every commit. A repo with zero commits yet (e.g. a freshly-`git init`'d empty `templates/`) has nothing to push and the script will error on that push step — that's expected, not a bug; just skip backing it up until it has at least one commit.
@@ -141,10 +141,10 @@ The GitHub API is unauthenticated here (60 requests/hour limit) — fine for occ
 
 ## 6. Compiling
 
-Don't generate a per-document compile script — it's the same few lines copied N times with nothing to keep them in sync. Use the single shared script at `~/.claude/skills/typst/scripts/compile.sh` instead, for any doc root (global or project-local):
+Don't generate a per-document compile script — it's the same few lines copied N times with nothing to keep them in sync. Use the single shared script at `~/.gemini/config/skills/typst/scripts/compile.sh` (or `~/.claude/skills/typst/scripts/compile.sh` / `~/.config/opencode/skills/typst/scripts/compile.sh` if using OpenCode/DeepSeek) instead, for any doc root (global or project-local):
 
 ```
-~/.claude/skills/typst/scripts/compile.sh <doc-root> [extra typst args...]
+~/.gemini/config/skills/typst/scripts/compile.sh <doc-root> [extra typst args...]
 ```
 
 It derives `<typst-root>/rendered/<doc-slug>/main.pdf` from `<doc-root>` (which must be `.../typst/sources/<doc-slug>`), compiling from `<doc-root>/src/main.typ`, adds `<doc-root>/fonts` if present, and falls back to adding the global fonts dir explicitly only if `TYPST_FONT_PATHS` isn't set in the environment.
@@ -159,18 +159,35 @@ After every compile, state the absolute path to the rendered file(s) back to the
 
 The `Artifact` tool only renders HTML or Markdown live in-browser. Typst is not a fit for it — Typst produces PDF/PNG/SVG via a compile step, not a live-rendered page. When the user wants a Typst deliverable, compile it with Bash and hand over the resulting file path (or open it) instead of trying to route it through Artifact.
 
-## 9. Sharing a rendered document (link instead of a file path)
+## 9. Sharing a rendered document (delegate to `share` skill)
 
-Don't default to a public anonymous dead-drop (0x0.st, transfer.sh, etc.) for these documents — they're often personal (invoices, letters, anything with private data) and those services are unauthenticated, third-party, and time-limited. The user has a private SFTPGo instance at `https://cloud.rcbnet.work` for this.
+After compiling, state the absolute path to the rendered PDF — that's it. Do NOT upload or notify by default.
 
-After compiling, if the user wants a shareable link (ask if it's not obvious from the request whether a file path or a link is wanted), use `~/.claude/skills/typst/scripts/share.sh <rendered-pdf> [--expires-days N] [--password <pw>]`:
+Only share when the user explicitly asks:
+- "schick mir den Link" / "per ntfy" → upload + notify via ntfy
+- "per Email" / "schick es an X" → open Thunderbird compose with PDF attached
+- "lade es hoch" → upload to SFTPGo, print the link
 
-- Reads credentials from `~/.config/claude-skill-typst/share.env` (chmod 600; `SFTPGO_BASE_URL`, plus either `SFTPGO_API_KEY` or `SFTPGO_USER`+`SFTPGO_PASS`, optional `SFTPGO_UPLOAD_DIR`). Never ask the user to paste a password or API key into chat — if the file still has placeholder `changeme` values, tell them to fill it in themselves.
-- Auth: prefers `SFTPGO_API_KEY`, sent directly as the `X-SFTPGO-API-KEY` header (no token exchange) — falls back to `SFTPGO_USER`/`SFTPGO_PASS` via Basic Auth against `/api/v2/user/token` to get a JWT if no API key is set. The target account needs "Allow API key authentication" enabled for the key to work at all. If a key is *unbound* (not tied to one user), SFTPGo expects a third segment appended: `<key-id>.<key-secret>.<username>` — try the key as given first, only append the username if you get a 401.
-- The script uploads into a **dedicated remote subfolder per share** (`<remote-base-dir>/<slug>/`, slug = the local file's parent directory name, e.g. `rendered/<doc-slug>` → `<doc-slug>`), then creates a **directory-scope** Share (`paths: ["<remote-base-dir>/<slug>"]`), not a file-scope one. This matters: SFTPGo can only do inline preview / a non-error `/browse` for directory-scope shares — a file-scope share always forces a zip download (confirmed in SFTPGo source, `internal/httpd/api_shares.go`: `validateBrowsableShare` explicitly rejects non-directories) and can never be inline, no matter what query params you add. Sharing the file's own isolated folder sidesteps that entirely.
-- For a `.pdf`, the script prints `<base>/web/client/pubshares/<id>/viewpdf?path=%2F<filename>` — this opens SFTPGo's PDF.js viewer directly (inline preview), which is what the user wants over a raw file path or a landing/browse page. For non-PDF files it falls back to `<base>/web/client/pubshares/<id>/browse`. Note the `path` query value needs *full* percent-encoding including the leading `/` (`%2F...`, not `/...`) — Python's `urllib.parse.quote` treats `/` as safe by default, so encode with `quote(path, safe="")`.
-- **Versioning, similar to redeploying an Artifact to the same URL**: the share is keyed by `slug` and reused across calls (looked up via `GET /api/v2/user/shares`, matched on `name == slug`) — re-sharing an updated version of the same document does *not* mint a new link, the existing one just keeps working. Each run also archives a timestamped copy under `<remote-dir>/versions/<timestamp>-<filename>`, so history isn't lost even though the "current" filename stays stable. Timestamp format is fixed at `YYYY-MM-DD_HH-MM-SS` (numeric-only `date` format specifiers, so it's locale-independent and always looks the same regardless of system locale). Caveat: the share is keyed only by the local folder's basename — two unrelated documents that happen to share a folder name would collide onto the same remote share (fine given our `sources/<slug>/` convention expects unique slugs, but worth knowing if slugs ever get reused/renamed).
-- **SFTPGo cannot host git repos over SSH** — confirmed: v2.7.0 removed all SSH exec-command support (including `git-upload-pack`/`git-receive-pack`) specifically because a malicious `pre-receive` hook could execute arbitrary code with the server's privileges. This is a hard removal, not a config toggle — don't suggest re-enabling it. If the user wants remote backup of the per-document git repos from step 4, point them at a real git host (self-hosted Gitea/Forgejo, a private GitHub/GitLab repo), not SFTPGo.
-- Defaults to a permanent link (`--expires-days N` to time-box it instead) — it's the user's own server and the share ID isn't discoverable/indexed, so there's no reason a link should go stale on its own. Use a real expiry only when the user asks for one-off/sensitive sharing.
-- Treat the first real run against the user's server as a trial — if `share.sh` errors, read the curl/HTTP status output; it's almost always an auth issue (see above) or the SFTPGo REST API having drifted from what's documented (endpoint/field names differ across versions).
-- If credentials were ever shared in plaintext chat (not just placed in the config file), tell the user to rotate/regenerate them in SFTPGo once things work — chat transcripts may be logged.
+All sharing is delegated to the **share** skill (`~/.claude/skills/share/`). Do NOT duplicate upload/notify logic here.
+
+### ntfy (opt-in)
+
+When the user asks for the link on their phone:
+```bash
+LINK=$(~/.claude/skills/share/scripts/share-upload.sh "$rendered_dir/main.pdf")
+~/.claude/skills/share/scripts/share-notify.sh "<title>" "<summary>" "$LINK"
+```
+
+### Thunderbird (opt-in)
+
+When the user asks for email:
+```bash
+~/.claude/skills/share/scripts/share-email.sh "$rendered_dir/main.pdf" "recipient@example.com" "Subject" "Body text"
+```
+
+### SFTPGo only (opt-in)
+
+When the user just wants a link (no notification):
+```bash
+~/.claude/skills/share/scripts/share-upload.sh "$rendered_dir/main.pdf"
+```
