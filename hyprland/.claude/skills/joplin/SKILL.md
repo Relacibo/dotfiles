@@ -63,6 +63,17 @@ Große Bodies: aus Datei/Quelle lesen, nicht ins Template pasten.
 | `clipperServer.autoStart: true` | Data API startet mit der App |
 | `showTrayIcon: true` + `startMinimized: true` | App startet unsichtbar im Tray (Fenster-los); nur zusammen aktiv! |
 
+## Bootstrap & Fehlerbehandlung (nicht bei jedem Start prüfen!)
+
+**Einmalig pro neuer Maschine:** `scripts/bootstrap-settings.sh` ausführen
+(idempotent, setzt die drei Keys, weigert sich während Joplin läuft).
+
+Danach gilt: **der `/ping` ist der funktionale Test** – Settings nur diagnostizieren,
+wenn ein Symptom auftritt:
+- Ping kommt nach App-Start nicht hoch → `clipperServer.autoStart` fehlt → Bootstrap.
+- User erwähnt ein sichtbares Joplin-Fenster → `showTrayIcon`/`startMinimized` fehlen
+  (nur Kosmetik, API funktioniert trotzdem) → Bootstrap beim nächsten belegten Moment.
+
 Falls Fenster doch mal sichtbar ist: Schließen (X) parkt Joplin im Tray, beendet es nicht.
 
 ## Hinweise
