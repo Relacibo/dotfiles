@@ -1,31 +1,33 @@
 ---
 name: joplin
-description: Startet Joplin und erstellt/aktualisiert Notizen über die Joplin Data API (localhost:41184). Use when the user asks to create, edit, update or sync a Joplin note, or when Joplin needs to be started first, or mentions Joplin notebooks like "Server".
+description: Startet Joplin unsichtbar im Tray und erstellt/aktualisiert Notizen über die Joplin Data API (localhost:41184). Use when the user asks to create, edit, update or sync a Joplin note, or when Joplin needs to be started first, or mentions Joplin notebooks like "Server".
 ---
 
 # Joplin steuern
 
-## App starten (falls zu)
+## App starten (unsichtbar im Tray)
 
-Joplin ist ein Flatpak. Desktop-App detached starten – Fenster erscheint auf dem User-Screen:
+Joplin ist ein Flatpak und startet mit `startMinimized` + `showTrayIcon` **ohne
+sichtbares Fenster** – Prozess + Data API laufen trotzdem:
 
 ```bash
 setsid nohup flatpak run net.cozic.joplin_desktop >/dev/null 2>&1 &
+# dann auf API warten (dauert 3-15 s):
+curl -s --max-time 2 http://localhost:41184/ping   # erwartet: JoplinClipperServer
 ```
+
+Kein Fensterhandling nötig (kein hyprctl/wmctrl). Der User sieht nur das Tray-Icon.
+Getestet: funktioniert voll autonom, ohne Rückfrage, aus Agent-Shells heraus.
 
 ## Data API
 
 - URL: `http://localhost:41184`
 - Token: aus `~/.config/joplin-desktop/settings.json` (Key `"api.token"`) lesen, nicht raten.
-- Der API-Server startet automatisch mit der App (`clipperServer.autoStart: true` ist gesetzt). Nach App-Start einige Sekunden warten.
+- Der API-Server startet automatisch mit der App (`clipperServer.autoStart: true`).
 
-Verfügbarkeit prüfen (erwartet `JoplinClipperServer`):
-
-```bash
-curl -s --max-time 3 http://localhost:41184/ping
-```
-
-**Antwortformat:** Listen-Endpunkte antworten als `{"items":[...]}` – nicht als bare Array. Token als Query-Param `?token=…` verwenden (Header `X-Auth-Token` ist unzuverlässig).
+**Antwortformat:** Listen-Endpunkte antworten als `{"items":[...]}` – nicht als bare Array.
+Token als Query-Param `?token=…` (Header `X-Auth-Token` unzuverlässig).
+Notiz-Update per **PUT** (`PATCH` → HTTP 405).
 
 ## Standard-Operationen (Python, JSON-safe)
 
@@ -41,21 +43,29 @@ def api(path, method="GET", payload=None):
 
 api("folders")                                    # Notizbücher: {"items":[{id,title}]}
 api("notes", "POST", {"title": "…", "body": "…", "parent_id": "<folder-id>"})   # neue Notiz
-api("notes/<id>", "PUT", {"body": "…"})           # Notiz aktualisieren (PUT! PATCH = 405)
+api("notes/<id>", "PUT", {"body": "…"})           # Notiz aktualisieren (PUT, nicht PATCH!)
 api("search?query=backup&type=folder")            # suchen
 ```
 
-Große Bodies: aus Datei lesen (`open(...).read()`), nicht ins Template pasten.
+Große Bodies: aus Datei/Quelle lesen, nicht ins Template pasten.
 
 ## Bekannte IDs (dieses System)
 
 - Notizbuch **"Server"**: `048ad3af500447efbe04c86fe39cb349`
 - Notiz **"Backup-Setup: restic (verschlüsselt) → ovilava"**: `8e9bea020f0e4eb8b75793936061ac9a`
-  - Quelle der Wahrheit für den Inhalt: `~/backup-setup.md` – nach Änderungen am Backup-Setup diese Datei aktualisieren und per PATCH in die Notiz spiegeln.
+  → **Dies ist die Quelle der Wahrheit** für das Backup-Runbook (früher lag es in
+  `~/backup-setup.md`, gelöscht). Nach Architektur-Änderungen die Notiz per PUT aktualisieren.
+
+## Wichtige Settings (`~/.config/joplin-desktop/settings.json`)
+
+| Key | Wirkung |
+|---|---|
+| `clipperServer.autoStart: true` | Data API startet mit der App |
+| `showTrayIcon: true` + `startMinimized: true` | App startet unsichtbar im Tray (Fenster-los); nur zusammen aktiv! |
+
+Falls Fenster doch mal sichtbar ist: Schließen (X) parkt Joplin im Tray, beendet es nicht.
 
 ## Hinweise
 
-- Getestet: Der Agent kann Joplin bei geschlossenem Zustand selbst starten (Shell erbt `WAYLAND_DISPLAY`/`XDG_RUNTIME_DIR` der Desktop-Session) – ohne Rückfrage; Nebeneffekt: Joplin-Fenster erscheint auf dem Screen.
-- Sync-Target ist WebDAV (`cloud.rcbnet.work/dav/joplin`) – die Notiz synchronisiert von selbst.
+- Sync-Target ist WebDAV (`cloud.rcbnet.work/dav/joplin`) – Notizen synchronisieren von selbst.
 - Niemals direkt in `~/.config/joplin-desktop/database.sqlite` schreiben.
-- Der User muss die App nicht selbst starten: Startkommando oben reicht, danach auf `/ping` warten.
