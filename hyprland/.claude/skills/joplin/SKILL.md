@@ -55,6 +55,7 @@ Große Bodies: aus Datei lesen (`open(...).read()`), nicht ins Template pasten.
 
 ## Hinweise
 
+- Getestet: Der Agent kann Joplin bei geschlossenem Zustand selbst starten (Shell erbt `WAYLAND_DISPLAY`/`XDG_RUNTIME_DIR` der Desktop-Session) – ohne Rückfrage; Nebeneffekt: Joplin-Fenster erscheint auf dem Screen.
 - Sync-Target ist WebDAV (`cloud.rcbnet.work/dav/joplin`) – die Notiz synchronisiert von selbst.
 - Niemals direkt in `~/.config/joplin-desktop/database.sqlite` schreiben.
 - Der User muss die App nicht selbst starten: Startkommando oben reicht, danach auf `/ping` warten.
