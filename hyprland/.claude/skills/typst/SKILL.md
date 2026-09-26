@@ -112,6 +112,8 @@ This is unrelated to the earlier finding that **SFTPGo cannot host git repos** �
 
 ## 5. Fonts
 
+**Only reference fonts that actually exist on this system** — verify with `typst fonts | rg -i <name>` before setting a `font:` anywhere. Safe, verified defaults here: `Libertinus Serif` (Typst-bundled, good body font) and `DejaVu Sans` / `DejaVu Sans Mono` (headings, code). Known trap: `Libertinus Sans` is *not* installed (Typst's bundled Libertinus only ships Serif + Math) — referencing it yields fallback warnings and inconsistent rendering; use `DejaVu Sans` for a sans heading face instead.
+
 Two font locations, both additive (not override tiers):
 
 1. `$(xdg-user-dir DOCUMENTS)/typst/fonts/` — personal fonts reused across many documents.
