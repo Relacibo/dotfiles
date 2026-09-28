@@ -26,8 +26,6 @@ Getestet: funktioniert voll autonom, ohne Rückfrage, aus Agent-Shells heraus.
 - Der API-Server startet automatisch mit der App (`clipperServer.autoStart: true`).
 
 **Antwortformat:** Listen-Endpunkte antworten als `{"items":[...]}` – nicht als bare Array.
-Token als Query-Param `?token=…` (Header `X-Auth-Token` unzuverlässig).
-Notiz-Update per **PUT** (`PATCH` → HTTP 405).
 
 ## Standard-Operationen (Python, JSON-safe)
 
@@ -36,18 +34,33 @@ import json, urllib.request
 TOKEN = "<aus settings.json>"
 
 def api(path, method="GET", payload=None):
+    # WICHTIG: Token mit & anhängen, wenn path schon ein ? hat –
+    # sonst ?…?token= und Joplin antwortet 403 "Missing token parameter"
+    sep = "&" if "?" in path else "?"
     data = json.dumps(payload).encode() if payload else None
-    req = urllib.request.Request(f"http://localhost:41184/{path}?token={TOKEN}",
-                                 data=data, headers={"Content-Type": "application/json"}, method=method)
+    req = urllib.request.Request(f"http://localhost:41184/{path}{sep}token={TOKEN}",
+                                 data=data, headers={"Content-Type": "application/json"},
+                                 method=method)
     return json.load(urllib.request.urlopen(req, timeout=10))
 
 api("folders")                                    # Notizbücher: {"items":[{id,title}]}
 api("notes", "POST", {"title": "…", "body": "…", "parent_id": "<folder-id>"})   # neue Notiz
-api("notes/<id>", "PUT", {"body": "…"})           # Notiz aktualisieren (PUT, nicht PATCH!)
+api("notes/<id>", "PUT", {"body": "…"})           # Notiz aktualisieren
+api("notes/<id>?fields=body")                     # Body lesen (helper kümmert sich um ?/&)
 api("search?query=backup&type=folder")            # suchen
 ```
 
 Große Bodies: aus Datei/Quelle lesen, nicht ins Template pasten.
+
+## Troubleshooting (echte Fälle aus der Praxis)
+
+| Symptom | Ursache | Fix |
+|---|---|---|
+| **HTTP 403** `"Missing token parameter"` | Token mit zweitem `?` angehängt, weil path schon `?fields=…` hatte | Helper oben benutzen (`&` statt `?`) |
+| **HTTP 405** Method Not Allowed | Notiz-Update per PATCH versucht | Notiz-Update immer **PUT** |
+| 403 obwohl Header `X-Auth-Token` gesetzt | Header wird (zumindest 3.7.18) nicht unterstützt | Token ausschließlich als Query-Param |
+| `notes?…`-Liste liefert Dict statt Array | gewollt | immer `.["items"]` entpacken |
+| Ping tot, App läuft | API braucht nach Kaltstart 3–15 s | Poll-Loop statt Einzelversuch |
 
 ## Bekannte IDs (dieses System)
 
