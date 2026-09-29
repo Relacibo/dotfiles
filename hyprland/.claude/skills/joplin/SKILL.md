@@ -7,6 +7,7 @@ description: Startet Joplin unsichtbar im Tray und erstellt/aktualisiert Notizen
 
 ## App starten (unsichtbar im Tray)
 
+> Bewusst KEIN System-Autostart (User-Präferenz) — nur On-Demand-Start durch die AI. Keine ~/.config/autostart/-Einträge anlegen!
 Joplin ist ein Flatpak und startet mit `startMinimized` + `showTrayIcon` **ohne
 sichtbares Fenster** – Prozess + Data API laufen trotzdem:
 
@@ -61,6 +62,8 @@ Große Bodies: aus Datei/Quelle lesen, nicht ins Template pasten.
 | 403 obwohl Header `X-Auth-Token` gesetzt | Header wird (zumindest 3.7.18) nicht unterstützt | Token ausschließlich als Query-Param |
 | `notes?…`-Liste liefert Dict statt Array | gewollt | immer `.["items"]` entpacken |
 | Ping tot, App läuft | API braucht nach Kaltstart 3–15 s | Poll-Loop statt Einzelversuch |
+| **Prozess da, API bleibt tot**, User sagt „Joplin war nie an"; Neustarts fruchten nicht | Nach hartem Kill (`kill -9`) bleibt `~/.config/joplin-desktop/lock` stehen → neue Instanz beendet sich still (Single-Instance-Guard) | Kill-Loop (s. nächste Zeile!), dann `rm -f ~/.config/joplin-desktop/lock`, dann Start + `/ping` (bis zu 25 s warten) |
+| **Shell-Tool-TIMEOUTs ohne jeglichen Output** bei Kill/pgrep-Aktionen rund um Joplin | `pkill/pgrep -f joplin_desktop` matcht die **eigene Kommandozeile** (enthält ja den String) → Kill auf die eigene Shell | Bracket-Trick: `pgrep -f "joplin_[d]esktop"` / `pkill -f "net[.]cozic[.]joplin_desktop"` — matcht Ziel, nie das eigene Kommando |
 
 ## Bekannte IDs (dieses System)
 
