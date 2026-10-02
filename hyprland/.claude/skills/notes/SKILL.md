@@ -19,7 +19,7 @@ Notizen sind plain Markdown in `~/notes` — git-Versioniert, kein Daemon, kein 
 Der User editiert selbst (helix o. ä.) — das LLM ist Mitschreiber, nicht Alleinherrscher. Plain Markdown, keine exotischen Konventionen erfinden, keine Front-Matter-Deko ohne Absprache.
 
 ## Sync-Transport: AKTIV (seit 02.10.2026)
-- **PC ↔ ovilava:** `rclone bisync ~/notes ↔ ovilava-notes:notizen` — WebDAV `https://cloud.rcbnet.work/dav` (SFTPGo hinter Traefik), `vendor = owncloud` (nötig für Modtime-Erhalt — Checkbox-Edits sind größenneutral!), User `reinhard`, Passwort obscured in `~/.config/rclone/rclone.conf`.
+- **PC ↔ ovilava:** `rclone bisync ~/notes ↔ ovilava-notes:notizen` — WebDAV `https://cloud.rcbnet.work/dav` (SFTPGo hinter Traefik), `vendor = owncloud` (nötig für Modtime-Erhalt — Checkbox-Edits sind größenneutral!), User `reinhard`, Passwort obscured in `~/.config/rclone/rclone.conf`. rclone selbst via dnf (`/usr/bin/rclone`) — nur EIN Binary für alle Syncs (bisync-States sind versionssensibel); Pfad konfigurierbar in `nsync.conf`.
 - Timer: `systemctl --user status nsync.timer` (alle 15 min, Persistent). Script: `~/.local/bin/nsync`, Log: `~/.local/state/nsync.log`. Manuell: `~/.local/bin/nsync`.
 - Desync/Reparatur: `--resync` an das Script-Kommando. Konflikte landen als `*.sync-conflict*`-Dateien — lesen, mergen, löschen, git commit. Nie stillschweigend löschen.
 - `.git/` bleibt außen vor (`~/.config/rclone/notes-filters.txt`) — gesync't wird der Working Tree; git-Historie lebt nur lokal auf anton-bruckner.
