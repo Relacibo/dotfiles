@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# nsync — notes bisync wrapper (PC/Laptop <-> ovilava webdav)
+# Aufruf: nsync [rclone-bisync-flags]   z.B. nsync --resync | nsync --dry-run
+# Das Remote wird per Umgebungsvariable definiert: keine Secrets in der Config,
+# kein Eintrag in rclone.conf — Config + Script sind repo-syncbar.
+CONF="${NSYNC_CONF:-$HOME/.config/nsync/nsync.conf}"
+# shellcheck disable=SC1090
+[ -f "$CONF" ] && . "$CONF"
+
+LOCAL="${LOCAL:-$HOME/notes}"
+REMOTE_NAME="${REMOTE_NAME:-ovilava-notes}"
+REMOTE_TYPE="${REMOTE_TYPE:-webdav}"
+REMOTE_URL="${REMOTE_URL:?REMOTE_URL fehlt in ${CONF}}"
+REMOTE_VENDOR="${REMOTE_VENDOR:-owncloud}"
+REMOTE_USER="${REMOTE_USER:?REMOTE_USER fehlt in ${CONF}}"
+PASS_FILE="${PASS_FILE:-$HOME/.config/nsync/ovilava-notes.pass}"
+SUBDIR="${SUBDIR:-notizen}"
+LOG="${LOG:-$HOME/.local/state/nsync.log}"
+FILTERS="${FILTERS:-$HOME/.config/nsync/filters.txt}"
+RCLONE="${RCLONE:-rclone}"
+GIT_DIR="${GIT_DIR:-$HOME/notes}"
+
+[ -r "$PASS_FILE" ] || { echo "nsync: Passwortdatei $PASS_FILE fehlt/unlesbar" >&2; exit 9; }
+PASS=$(cat "$PASS_FILE")
+NAME_UP="${REMOTE_NAME^^}"
+REMOTE="${REMOTE_NAME}:${SUBDIR}"
+
+mkdir -p "$(dirname "$LOG")"
+exec >> "$LOG" 2>&1
+echo "=== $(date '+%F %T') nsync start ($LOCAL <-> $REMOTE) $*"
+
+env \
+  "RCLONE_CONFIG_${NAME_UP}_TYPE=${REMOTE_TYPE}" \
+  "RCLONE_CONFIG_${NAME_UP}_URL=${REMOTE_URL}" \
+  "RCLONE_CONFIG_${NAME_UP}_VENDOR=${REMOTE_VENDOR}" \
+  "RCLONE_CONFIG_${NAME_UP}_USER=${REMOTE_USER}" \
+  "RCLONE_CONFIG_${NAME_UP}_PASS=${PASS}" \
+  "$RCLONE" bisync "$LOCAL" "$REMOTE" \
+  --filters-file "$FILTERS" \
+  --conflict-suffix sync-conflict \
+  --resilient --max-lock 2m "$@"
+RC=$?
+echo "=== exit $RC"
+
+if [ $RC -eq 0 ] && [ "${NSYNC_NO_GIT:-0}" != "1" ] && [ -d "$GIT_DIR/.git" ]; then
+  git -C "$GIT_DIR" add -A
+  if ! git -C "$GIT_DIR" diff --cached --quiet; then
+    git -C "$GIT_DIR" commit -q -m "nsync: auto-commit nach bisync"
+    echo "=== git auto-commit"
+  fi
+fi
+exit $RC

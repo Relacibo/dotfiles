@@ -1,0 +1,6 @@
+[Unit]
+Description=notes bisync (rclone, ovilava webdav)
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/nsync
