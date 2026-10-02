@@ -20,7 +20,7 @@ Der User editiert selbst (helix o. ä.) — das LLM ist Mitschreiber, nicht Alle
 
 ## Sync-Transport: AKTIV (seit 02.10.2026)
 - **PC ↔ ovilava:** `rclone bisync ~/notes ↔ ovilava-notes:notizen` — WebDAV `https://cloud.rcbnet.work/dav` (SFTPGo hinter Traefik), `vendor = owncloud` (nötig für Modtime-Erhalt — Checkbox-Edits sind größenneutral!), User `reinhard`, Passwort obscured in `~/.config/rclone/rclone.conf`.
-- Timer: `systemctl --user status notes-sync.timer` (alle 15 min, Persistent). Script: `~/.local/bin/notes-sync`, Log: `~/.local/state/notes-sync.log`. Manuell: `~/.local/bin/notes-sync`.
+- Timer: `systemctl --user status nsync.timer` (alle 15 min, Persistent). Script: `~/.local/bin/nsync`, Log: `~/.local/state/nsync.log`. Manuell: `~/.local/bin/nsync`.
 - Desync/Reparatur: `--resync` an das Script-Kommando. Konflikte landen als `*.sync-conflict*`-Dateien — lesen, mergen, löschen, git commit. Nie stillschweigend löschen.
 - `.git/` bleibt außen vor (`~/.config/rclone/notes-filters.txt`) — gesync't wird der Working Tree; git-Historie lebt nur lokal auf anton-bruckner.
 - Phone: Markor + FolderSync (WebDAV `…/dav/notizen`, User reinhard) — Einrichtung durch User.
