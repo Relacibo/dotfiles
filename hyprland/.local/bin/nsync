@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # nsync — notes bisync wrapper (PC/Laptop <-> ovilava webdav)
 # Aufruf: nsync [rclone-bisync-flags]   z.B. nsync --resync | nsync --dry-run
+#         nsync install                 Pass-Datei + Timer-Intervall (Drop-In) + Timer aktivieren
 # Das Remote wird per Umgebungsvariable definiert: keine Secrets in der Config,
 # kein Eintrag in rclone.conf — Config + Script sind repo-syncbar.
 CONF="${NSYNC_CONF:-$HOME/.config/nsync/nsync.conf}"
@@ -19,8 +20,43 @@ LOG="${LOG:-$HOME/.local/state/nsync.log}"
 FILTERS="${FILTERS:-$HOME/.config/nsync/filters.txt}"
 RCLONE="${RCLONE:-rclone}"
 GIT_DIR="${GIT_DIR:-$HOME/notes}"
+INTERVAL="${INTERVAL:-}"
 
-[ -r "$PASS_FILE" ] || { echo "nsync: Passwortdatei $PASS_FILE fehlt/unlesbar" >&2; exit 9; }
+do_install() {
+  command -v "$RCLONE" >/dev/null 2>&1 || { echo "nsync install: rclone nicht gefunden (dnf/pacman install rclone)" >&2; return 1; }
+  mkdir -p "$(dirname "$PASS_FILE")"
+  if [ -s "$PASS_FILE" ]; then
+    echo "nsync install: Passwortdatei $PASS_FILE vorhanden — unberührt gelassen."
+  elif [ -t 0 ]; then
+    printf 'WebDAV-Passwort für %s (%s): ' "$REMOTE_USER" "$REMOTE_URL" >&2
+    read -r -s PW; echo >&2
+    [ -n "$PW" ] || { echo "nsync install: leeres Passwort — Abbruch" >&2; return 1; }
+    "$RCLONE" obscure "$PW" > "$PASS_FILE" && chmod 600 "$PASS_FILE" \
+      && echo "nsync install: → $PASS_FILE angelegt (obscured, chmod 600)"
+  else
+    echo "nsync install: $PASS_FILE fehlt und stdin ist kein TTY — Passwort kann nicht abgefragt werden." >&2
+    echo "  Manuell: read -s PW && $RCLONE obscure \"\$PW\" > $PASS_FILE && chmod 600 $PASS_FILE" >&2
+    return 1
+  fi
+  if [ -n "$INTERVAL" ]; then
+    mkdir -p "$HOME/.config/systemd/user/nsync.timer.d"
+    printf '[Timer]\nOnCalendar=%s\n' "$INTERVAL" > "$HOME/.config/systemd/user/nsync.timer.d/override.conf"
+    echo "nsync install: → Timer-Intervall '$INTERVAL' als systemd-Drop-In gesetzt (maschinenlokal, nicht im Repo)"
+  fi
+  systemctl --user daemon-reload
+  if systemctl --user enable --now nsync.timer 2>/dev/null; then
+    echo "nsync install: → Timer aktiv"
+  else
+    echo "nsync install: → Timer-Unit nicht gefunden (erst dotfiles stowen) — Sync läuft manuell: nsync" >&2
+  fi
+  echo "nsync install: fertig. Erster Abgleich auf neuem Gerät: nsync --resync"
+}
+
+case "${1:-}" in
+  install) shift; do_install; exit $? ;;
+esac
+
+[ -r "$PASS_FILE" ] || { echo "nsync: Passwortdatei $PASS_FILE fehlt (einmal: nsync install) oder unlesbar" >&2; exit 9; }
 PASS=$(cat "$PASS_FILE")
 NAME_UP="${REMOTE_NAME^^}"
 REMOTE="${REMOTE_NAME}:${SUBDIR}"
