@@ -18,8 +18,13 @@ Notizen sind plain Markdown in `~/notes` — git-Versioniert, kein Daemon, kein 
 ## Editor-Realität
 Der User editiert selbst (helix o. ä.) — das LLM ist Mitschreiber, nicht Alleinherrscher. Plain Markdown, keine exotischen Konventionen erfinden, keine Front-Matter-Deko ohne Absprache.
 
-## Sync-Transport: offen
-Noch nichts eingerichtet. Kandidaten: WebDAV (rcbnet.work), SFTPGo (läuft auf ovilava), Phone-App: Markor. Falls Ordner-Sync eingerichtet wird: `.git/` vom Sync ausschließen.
+## Sync-Transport: AKTIV (seit 02.10.2026)
+- **PC ↔ ovilava:** `rclone bisync ~/notes ↔ ovilava-notes:notizen` — WebDAV `https://cloud.rcbnet.work/dav` (SFTPGo hinter Traefik), `vendor = owncloud` (nötig für Modtime-Erhalt — Checkbox-Edits sind größenneutral!), User `reinhard`, Passwort obscured in `~/.config/rclone/rclone.conf`.
+- Timer: `systemctl --user status notes-sync.timer` (alle 15 min, Persistent). Script: `~/.local/bin/notes-sync`, Log: `~/.local/state/notes-sync.log`. Manuell: `~/.local/bin/notes-sync`.
+- Desync/Reparatur: `--resync` an das Script-Kommando. Konflikte landen als `*.sync-conflict*`-Dateien — lesen, mergen, löschen, git commit. Nie stillschweigend löschen.
+- `.git/` bleibt außen vor (`~/.config/rclone/notes-filters.txt`) — gesync't wird der Working Tree; git-Historie lebt nur lokal auf anton-bruckner.
+- Phone: Markor + FolderSync (WebDAV `…/dav/notizen`, User reinhard) — Einrichtung durch User.
+- Timer läuft nur während einer User-Session (kein Linger). Für Sync ohne Login: `loginctl enable-linger reinhard` (braucht User-Sudo).
 
 ## Joplin: beerdigt
 Nicht mehr starten, nicht mehr reviven. Archiv bleibt bis auf Weiteres: DB `~/.config/joplin-desktop/database.sqlite` + WebDAV-Remote. Passwörter sind längst in Bitwarden (User, 02.10.2026). Die 3 PNG-Resources in der Joplin-DB hängen an gelöschten Notizen und wurden nicht migriert.
