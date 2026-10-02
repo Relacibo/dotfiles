@@ -19,11 +19,11 @@ Notizen sind plain Markdown in `~/notes` — git-Versioniert, kein Daemon, kein 
 Der User editiert selbst (helix o. ä.) — das LLM ist Mitschreiber, nicht Alleinherrscher. Plain Markdown, keine exotischen Konventionen erfinden, keine Front-Matter-Deko ohne Absprache.
 
 ## Sync-Transport: AKTIV (seit 02.10.2026)
-- **PC ↔ ovilava:** `rclone bisync ~/notes ↔ ovilava-notes:notizen` — WebDAV `https://cloud.rcbnet.work/dav` (SFTPGo hinter Traefik), `vendor = owncloud` (nötig für Modtime-Erhalt — Checkbox-Edits sind größenneutral!), User `reinhard`, Passwort obscured in `~/.config/rclone/rclone.conf`. rclone selbst via dnf (`/usr/bin/rclone`) — nur EIN Binary für alle Syncs (bisync-States sind versionssensibel); Pfad konfigurierbar in `nsync.conf`.
-- Timer: `systemctl --user status nsync.timer` (alle 15 min, Persistent). Script: `~/.local/bin/nsync`, Log: `~/.local/state/nsync.log`. Manuell: `~/.local/bin/nsync`.
-- Desync/Reparatur: `--resync` an das Script-Kommando. Konflikte landen als `*.sync-conflict*`-Dateien — lesen, mergen, löschen, git commit. Nie stillschweigend löschen.
-- `.git/` bleibt außen vor (`~/.config/rclone/notes-filters.txt`) — gesync't wird der Working Tree; git-Historie lebt nur lokal auf anton-bruckner.
-- Phone: Markor + FolderSync (WebDAV `…/dav/notizen`, User reinhard) — Einrichtung durch User.
+- **PC ↔ ovilava:** `nsync` (rclone bisync) — WebDAV `https://cloud.rcbnet.work/dav/notizen` (SFTPGo hinter Traefik), `vendor = owncloud` (nötig für Modtime-Erhalt — Checkbox-Edits sind größenneutral!), User `reinhard`. rclone via dnf (`/usr/bin/rclone`), nur EIN Binary (bisync-States sind versionssensibel).
+- **Kein Secret in syncbaren Dateien:** Das Remote wird per Umgebungsvariable definiert (`RCLONE_CONFIG_OVILAVA-NOTES_*`) — kein Eintrag in `rclone.conf`, keine Pass-Zeile in der Config. Passwort: obscured-Datei `~/.config/nsync/ovilava-notes.pass` (chmod 600, maschinenlokal, erzeugt via `rclone obscure`).
+- **Dotfiles-Repo (stow):** `hyprland/.local/bin/nsync`, `hyprland/.config/nsync/nsync.conf` + `filters.txt`, `hyprland/.config/systemd/user/nsync.{service,timer}` — Home-Symlinks zeigen ins Repo. **Laptop-Setup:** dotfiles stowen → `pacman -S rclone` → `mkdir -p ~/.config/nsync && read -s PW && rclone obscure "$PW" > ~/.config/nsync/ovilava-notes.pass && chmod 600 ~/.config/nsync/ovilava-notes.pass` → `systemctl --user enable --now nsync.timer` → einmal `nsync --resync`.
+- Timer: `systemctl --user status nsync.timer` (alle 15 min, Persistent). Manuell: `nsync` / `nsync --dry-run` / `nsync --resync` (Flags durchgereicht). Log: `~/.local/state/nsync.log`. Konfig: `~/.config/nsync/nsync.conf` (Env-Override: `NSYNC_CONF`; Auto-Commit aus: `NSYNC_NO_GIT=1`).
+- Konflikte: `*.sync-conflict*`-Dateien — lesen, mergen, löschen, commit. Nie stillschweigend löschen. `.git/**` gefiltert; git-Historie lebt bislang nur lokal auf anton-bruckner (kein git-remote für ~/notes).
 - Timer läuft nur während einer User-Session (kein Linger). Für Sync ohne Login: `loginctl enable-linger reinhard` (braucht User-Sudo).
 
 ## Joplin: beerdigt
