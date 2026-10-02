@@ -12,4 +12,4 @@ Notizen: plain Markdown in `~/notes`, git-lokal (kein remote), sync per `nsync` 
 - Auto: `nsync.timer` alle 15 min. Manuell: `nsync` (Flags reichen durch: `--resync` bei Desync, `--dry-run`). Log: `~/.local/state/nsync.log`.
 - Konfig: `~/.config/nsync/nsync.conf`; Passwort: `~/.config/nsync/ovilava-notes.pass` — **maschinenlokal, nie in syncbare Dateien oder das Repo!** Script/Units liegen im dotfiles-Repo (stow).
 - Konflikte: `*.sync-conflict*`-Dateien → beide Versionen lesen, mergen, Konfliktdatei löschen, commit. Nie stillschweigend löschen.
-- `.git/**` wird nicht gesync't. Phone synct dasselbe WebDAV (Markor + FolderSync). Joplin (`~/.config/joplin-desktop`, dav/joplin) ist Archiv — nicht verwenden.
+- `.git/**` wird nicht gesync't. Phone synct dasselbe WebDAV (Markor + FolderSync).
