@@ -1,0 +1,152 @@
+[boxes.daheim]
+base_url = "http://192.168.178.1:49000"
+user = "fritz8427"
+
+[hosts.cachyos]
+mac = ""
+ssh = "cachyos"
+note = "dell laptop, 192.168.178.28"
+
+[hosts.pc]
+mac = "a8:a1:59:db:b3:7e"
+ssh = "anton-bruckner.fritz.box"
+note = "anton-bruckner, Fedora 43, 192.168.178.21"
+
+[connections.ssh.cachyos]
+dest = "cachyos"
+user = ""
+note = "dell laptop"
+
+[connections.ssh.pc]
+dest = "anton-bruckner.fritz.box"
+user = "reinhard"
+note = "anton-bruckner (self)"
+
+[actions.cachyos-uptime]
+host = "cachyos"
+run = "uptime"
+check = "uptime"
+check_ok = ""
+note = ""
+
+[actions.gstream-off]
+host = "pc"
+run = "/home/reinhard/.local/bin/gstream off"
+check = ""
+check_ok = ""
+note = ""
+
+[actions.gstream-on]
+host = "pc"
+run = "/home/reinhard/.local/bin/gstream on"
+check = ""
+check_ok = ""
+note = ""
+
+[actions.gstream-state]
+host = "pc"
+run = ""
+check = "/home/reinhard/.local/bin/gstream status"
+check_ok = ""
+note = ""
+
+[[widgets]]
+id = "pc"
+title = "PC"
+disabled = false
+status_paused = false
+pausable = true
+
+[widgets.status]
+kind = "ping.check"
+
+[widgets.status.params]
+host = "anton-bruckner.fritz.box"
+
+[[widgets.actions]]
+label = "Wecken"
+when = "fail"
+
+[widgets.actions.op]
+kind = "fritzbox.wake"
+
+[widgets.actions.op.params]
+box = "daheim"
+mac = "a8:a1:59:db:b3:7e"
+
+[[widgets.actions]]
+label = "Ausschalten"
+when = "ok"
+
+[widgets.actions.op]
+kind = "ssh.run"
+
+[widgets.actions.op.params]
+command = "systemctl suspend"
+connection = "pc"
+
+[widgets.trigger]
+kind = ""
+interval_secs = 0
+
+[[widgets]]
+id = "gstream"
+title = "Stream"
+disabled = false
+status_paused = true
+pausable = true
+
+[widgets.status]
+kind = "ssh.run"
+
+[widgets.status.params]
+command = "/home/reinhard/.local/bin/gstream status"
+connection = "pc"
+ok_contains = "vorhanden"
+
+[[widgets.actions]]
+label = "An"
+when = "fail"
+
+[widgets.actions.op]
+kind = "ssh.run"
+
+[widgets.actions.op.params]
+command = "/home/reinhard/.local/bin/gstream on"
+connection = "pc"
+
+[[widgets.actions]]
+label = "Aus"
+when = "ok"
+
+[widgets.actions.op]
+kind = "ssh.run"
+
+[widgets.actions.op.params]
+command = "/home/reinhard/.local/bin/gstream off"
+connection = "pc"
+
+[widgets.trigger]
+kind = ""
+interval_secs = 0
+
+[[widgets]]
+id = "laptop-online"
+title = "Laptop status"
+disabled = false
+status_paused = false
+pausable = false
+actions = []
+
+[widgets.status]
+kind = "ping.check"
+
+[widgets.status.params]
+host = "cachyos.fritz.box"
+
+[widgets.trigger]
+kind = "manual"
+interval_secs = 0
+
+[sync]
+url = "https://raw.githubusercontent.com/Relacibo/dotfiles/main/sparrow-cannon/.config/sparrow-cannon/config.toml"
