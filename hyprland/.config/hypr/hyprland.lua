@@ -55,6 +55,8 @@ hl.on("hyprland.start", function ()
     hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=Hyprland")
     hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
     hl.exec_cmd("$HOME/.config/hypr/toggle_theme.sh --restore") -- Theme Management
+    hl.exec_cmd("/usr/libexec/kdeconnectd")
+    hl.exec_cmd("kdeconnect-indicator")
 end)
 
 -- #####################
