@@ -182,9 +182,9 @@ local mainMod = "SUPER"
 -- nu mit Absolutpfad: wezterm spawnt ohne Shell, PATH ist das minimale Session-Env
 hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("wezterm start --always-new-process -e /home/reinhard/.cargo/bin/nu"))
--- tere/re(): Verzeichnis waehlen, dann nu darin
-hl.bind(mainMod .. " + CTRL + Q", hl.dsp.exec_cmd("wezterm start --always-new-process -e zsh -ic 'cd $(tere) && nu'"))
-hl.bind(mainMod .. " + CTRL + SHIFT + Q", hl.dsp.exec_cmd(filePickerTerminal))
+-- tere/re(): Ctrl legt den File-Picker dazu (Shift waehlt die Shell)
+hl.bind(mainMod .. " + CTRL + Q", hl.dsp.exec_cmd(filePickerTerminal))
+hl.bind(mainMod .. " + CTRL + SHIFT + Q", hl.dsp.exec_cmd("wezterm start --always-new-process -e zsh -ic 'cd $(tere) && nu'"))
 -- tere ausfuehren, dann opencode im gewaehlten Verzeichnis
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("wezterm start --always-new-process -- zsh -ic opencode"))
 hl.bind(mainMod .. " + SHIFT + O", hl.dsp.exec_cmd("wezterm start --always-new-process -e zsh -c 'cd $(tere) && zsh -ic opencode'"))
