@@ -182,6 +182,9 @@ hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(terminal))
 -- tere ausfuehren, dann opencode im gewaehlten Verzeichnis
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("wezterm start --always-new-process -- zsh -ic opencode"))
 hl.bind(mainMod .. " + SHIFT + O", hl.dsp.exec_cmd("wezterm start --always-new-process -e zsh -c 'cd $(tere) && zsh -ic opencode'"))
+-- nushell-Variante: reines nu, bzw. tere -> nu im gewaehlten Verzeichnis
+hl.bind(mainMod .. " + ALT + Q", hl.dsp.exec_cmd("wezterm start --always-new-process -e nu"))
+hl.bind(mainMod .. " + ALT + SHIFT + Q", hl.dsp.exec_cmd("wezterm start --always-new-process -e zsh -c 'cd $(tere) && nu'"))
 hl.bind(mainMod .. " + C", hl.dsp.window.close())
 hl.bind(mainMod .. " + M", hl.dsp.exit())
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
