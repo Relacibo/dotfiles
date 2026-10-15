@@ -43,5 +43,16 @@ def --env re [...rest] {
 $env.config = {
     edit_mode: helix
     buffer_editor: "hx" # Strg+O: aktuelle Kommandozeile im echten Helix bearbeiten
+    # Reedlines Helix-Mode kennt kein ';' (Selektion kollabieren) — hier nachgerüstet.
+    # Wirkt auf die ruhende Selektion nach Esc aus dem Select-Mode.
+    keybindings: [
+        {
+            name: collapse_selection
+            modifier: none
+            keycode: "char_;"
+            mode: helix_normal
+            event: { edit: CollapseSelection, direction: forward }
+        }
+    ]
 }
 
