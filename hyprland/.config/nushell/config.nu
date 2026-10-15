@@ -40,5 +40,7 @@ def --env re [...rest] {
 # intentional overrides) unless you need Nu-side default setup.
 #
 # version = "0.116.1"
-$env.config = {}
+$env.config = {
+    edit_mode: helix
+}
 
