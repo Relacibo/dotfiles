@@ -45,11 +45,6 @@ $env.config = {
     buffer_editor: "hx" # Strg+O: aktuelle Kommandozeile im echten Helix bearbeiten
     # Reedlines Helix-Mode kennt kein ';' (Selektion kollabieren) — hier nachgerüstet.
     # Wirkt auf die ruhende Selektion nach Esc aus dem Select-Mode.
-    # Auch nachgerüstet: Surround/Match-Ops auf Alt-Keys (Reedline kann keine
-    # Chords wie m-i-(), deshalb Mnemonics statt Helix-Keymap):
-    #   Alt+i = di(   Alt+a = da(   Alt+Shift+I = di"   Alt+Shift+A = da"
-    #   Alt+m = ms( bei Selektion, sonst () mit Cursor dazwischen
-    #   Alt+Shift+M = ms" analog
     keybindings: [
         {
             name: collapse_selection
@@ -57,48 +52,6 @@ $env.config = {
             keycode: "char_;"
             mode: helix_normal
             event: { edit: CollapseSelection, direction: forward }
-        }
-        {
-            name: match_inside_parens
-            modifier: alt
-            keycode: char_i
-            mode: helix_normal
-            event: { edit: CutInsidePair, left: "(", right: ")" }
-        }
-        {
-            name: match_around_parens
-            modifier: alt
-            keycode: char_a
-            mode: helix_normal
-            event: { edit: CutAroundPair, left: "(", right: ")" }
-        }
-        {
-            name: match_inside_quotes
-            modifier: alt_shift
-            keycode: char_i
-            mode: helix_normal
-            event: { edit: CutInsidePair, left: '"', right: '"' }
-        }
-        {
-            name: match_around_quotes
-            modifier: alt_shift
-            keycode: char_a
-            mode: helix_normal
-            event: { edit: CutAroundPair, left: '"', right: '"' }
-        }
-        {
-            name: surround_parens
-            modifier: alt
-            keycode: char_m
-            mode: [helix_normal, helix_select]
-            event: { edit: InsertPair, open: "(", close: ")" }
-        }
-        {
-            name: surround_quotes
-            modifier: alt_shift
-            keycode: char_m
-            mode: [helix_normal, helix_select]
-            event: { edit: InsertPair, open: '"', close: '"' }
         }
     ]
 }
