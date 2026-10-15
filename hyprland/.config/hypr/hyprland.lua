@@ -179,6 +179,9 @@ hl.animation({ leaf = "zoomFactor",    enabled = true, speed = 7,    bezier = "q
 local mainMod = "SUPER"
 
 hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(terminal))
+-- tere ausfuehren, dann opencode im gewaehlten Verzeichnis
+hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("wezterm start --always-new-process -- zsh -ic opencode"))
+hl.bind(mainMod .. " + SHIFT + O", hl.dsp.exec_cmd("wezterm start --always-new-process -e zsh -c 'cd $(tere) && zsh -ic opencode'"))
 hl.bind(mainMod .. " + C", hl.dsp.window.close())
 hl.bind(mainMod .. " + M", hl.dsp.exit())
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
@@ -240,7 +243,7 @@ hl.bind(mainMod .. " + SHIFT + P",        hl.dsp.exec_cmd("hyprshot -o $HOME/Bil
 hl.bind(mainMod .. " + CTRL + SHIFT + P", hl.dsp.exec_cmd("hyprshot -o $HOME/Bilder/hyprshot -m window"))
 
 hl.bind(mainMod .. " + SHIFT + ALT + O", hl.dsp.exec_cmd("bash -c 'FEN=$(hyprshot --raw -m region | ~/.dotfiles/hyprland/.config/hypr/chess-cli.py) && [ -n \"$FEN\" ] && xdg-open \"https://lichess.org/editor/$FEN\"'"))
-hl.bind(mainMod .. " + SHIFT + O",       hl.dsp.exec_cmd("hyprpicker -a"))
+hl.bind(mainMod .. " + I",              hl.dsp.exec_cmd("hyprpicker -a"))
 
 hl.bind(mainMod .. " + K", hl.dsp.exec_cmd("$HOME/.dotfiles/hyprland/.config/hypr/switch_kvm.sh")) -- KVM auf Ziel in KVM_TARGET umschalten
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("$HOME/.config/hypr/toggle_theme.sh"))                   -- Dark/Light-Mode umschalten
