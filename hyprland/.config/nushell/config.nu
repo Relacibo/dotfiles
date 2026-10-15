@@ -42,5 +42,6 @@ def --env re [...rest] {
 # version = "0.116.1"
 $env.config = {
     edit_mode: helix
+    buffer_editor: "hx" # Strg+O: aktuelle Kommandozeile im echten Helix bearbeiten
 }
 
