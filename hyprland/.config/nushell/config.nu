@@ -2,6 +2,37 @@
 #
 # version = "0.99.1"
 
+# ── Umgebung: zentrale Quelle ist ~/.profile ─────────────────────────
+# ~/.profile wird von der .zshrc gesourced und hier via bash importiert —
+# ein Ort für PATH & Co., zwei Konsumenten. Muss vor allem anderen laufen.
+let posix_env = (
+    bash -c 'set -a; source $HOME/.profile >/dev/null 2>&1; /usr/bin/env -0'
+        | split row (char nul)
+        | each {|entry|
+            let eq = ($entry | str index-of '=')
+            if $eq < 0 {
+                null
+            } else {
+                {
+                    name: ($entry | str substring 0..<$eq)
+                    value: ($entry | str substring ($eq + 1)..<($entry | str length))
+                }
+            }
+        }
+        | compact
+)
+
+# PWD/OLDPWD/_ sind shell-intern und dürfen in nu nicht manuell gesetzt werden
+load-env ($posix_env | where name !~ '^(PATH|PWD|OLDPWD|_)$' | reduce -f {} {|e, acc| $acc | insert $e.name $e.value })
+$env.PATH = ($posix_env | where name == "PATH" | get 0.value | split row (char esep) | uniq)
+
+# re — tere als Datei-Browser, cd in das Ergebnis (Port der zsh-Funktion)
+def --env re [...rest] {
+    let result = (tere ...$rest | complete | get stdout | str trim)
+    if ($result | is-not-empty) { cd $result }
+}
+
+
 # For more information on defining custom themes, see
 # https://www.nushell.sh/book/coloring_and_theming.html
 # And here is the theme collection

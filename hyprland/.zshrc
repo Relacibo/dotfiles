@@ -122,21 +122,8 @@ fpath+=~/.zfunc
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-[ -f "/home/reinhard/.ghcup/env" ] && source "/home/reinhard/.ghcup/env" # ghcup-env
-. "$HOME/.cargo/env"
-
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/programs/firefox:$PATH"
-export PATH="$HOME/programs/blender:$PATH"
-export PATH="$HOME/programs/flutter/bin:$PATH"
-export PATH="$HOME/go/bin:$PATH"
-export PATH="$(yarn global bin):$PATH"
-export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
-export PATH="$HOME/git/hyprmcsr/bin:$PATH"
-export PATH="$HOME/programs/ngrok:$PATH"
-export PATH="$HOME/programs/roc/:$PATH"
-
-export WINEDLLPATH=$WINEDLLPATH:/opt/rpc-wine/bin64:/opt/rpc-wine/bin32
+# PATH & zentrale Env-Variablen: ~/.profile (eine Quelle für zsh + nushell)
+. "$HOME/.profile"
 
 # Pfade definieren
 NVM_SYSTEM_INIT="/usr/share/nvm/init-nvm.sh"
@@ -193,6 +180,13 @@ cl() {
 fpath=(/home/reinhard/git/hyprmcsr/tab-completions $fpath)
 autoload -Uz compinit && compinit
 
+alias claude-priv='CLAUDE_CONFIG_DIR=$HOME/.claude-private claude'
+
+# todofmt (~/git/todofmt): kurze Namen fürs Terminal.
+# tdone/tstamp sind echte Scripts in ~/.local/bin (dotfiles, via Stow verlinkt),
+# damit sie auch in nicht-interaktiven Shells funktionieren — Helix :pipe, cron.
+alias tfmt='todofmt'
+
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 if [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]]; then
@@ -200,5 +194,9 @@ if [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]]; then
 fi
 
 
-# Added by Antigravity CLI installer
-export PATH="/home/reinhard/.local/bin:$PATH"
+
+
+# glowp – glow im Pager-Modus, Umbruch = volle Terminalbreite (glow cappt sonst bei 120)
+glowp() { glow -p -w "$(( ${COLUMNS:-160} - 4 ))" "$@"; }
+
+
