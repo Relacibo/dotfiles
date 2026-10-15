@@ -24,7 +24,7 @@ hl.env("QT_QPA_PLATFORMTHEME", "qt6ct") -- fuer Qt-Apps (qt6ct)
 -- ###################
 
 local terminal             = "wezterm"
-local filePickerTerminal   = "wezterm start -e zsh -c 'cd $(tere) && zsh'"
+local filePickerTerminal   = "wezterm start -e zsh -ic 'cd $(tere) && zsh'"
 local textEditor           = "wezterm start hx"
 local filePickerTextEditor = "wezterm start -e zsh -c 'hx -w $(tere)'"
 local browser              = "firefox"
@@ -178,13 +178,16 @@ hl.animation({ leaf = "zoomFactor",    enabled = true, speed = 7,    bezier = "q
 
 local mainMod = "SUPER"
 
+-- Q-Familie: plain=zsh, Shift=nushell, Ctrl(+Shift)=tere/re-Variante
+-- nu mit Absolutpfad: wezterm spawnt ohne Shell, PATH ist das minimale Session-Env
 hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(terminal))
+hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("wezterm start --always-new-process -e /home/reinhard/.cargo/bin/nu"))
+-- tere/re(): Verzeichnis waehlen, dann nu darin
+hl.bind(mainMod .. " + CTRL + Q", hl.dsp.exec_cmd("wezterm start --always-new-process -e zsh -ic 'cd $(tere) && nu'"))
+hl.bind(mainMod .. " + CTRL + SHIFT + Q", hl.dsp.exec_cmd(filePickerTerminal))
 -- tere ausfuehren, dann opencode im gewaehlten Verzeichnis
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("wezterm start --always-new-process -- zsh -ic opencode"))
 hl.bind(mainMod .. " + SHIFT + O", hl.dsp.exec_cmd("wezterm start --always-new-process -e zsh -c 'cd $(tere) && zsh -ic opencode'"))
--- nushell-Variante: reines nu, bzw. tere -> nu im gewaehlten Verzeichnis
-hl.bind(mainMod .. " + ALT + Q", hl.dsp.exec_cmd("wezterm start --always-new-process -e nu"))
-hl.bind(mainMod .. " + ALT + SHIFT + Q", hl.dsp.exec_cmd("wezterm start --always-new-process -e zsh -c 'cd $(tere) && nu'"))
 hl.bind(mainMod .. " + C", hl.dsp.window.close())
 hl.bind(mainMod .. " + M", hl.dsp.exit())
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
@@ -236,7 +239,6 @@ hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + H",        hl.dsp.exec_cmd(textEditor))
 hl.bind(mainMod .. " + SHIFT + H", hl.dsp.exec_cmd(filePickerTextEditor))
 hl.bind(mainMod .. " + B",        hl.dsp.exec_cmd(browser))
-hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd(filePickerTerminal))
 hl.bind(mainMod .. " + SHIFT + C", hl.dsp.exec_cmd("~/.cargo/bin/codep recent -a | rofi -dmenu | xargs -r -I {} code --new-window \"{}\""))
 hl.bind(mainMod .. " + CTRL + SHIFT + C", hl.dsp.exec_cmd("~/.cargo/bin/codep -p workspaces -aD -M 365 | rofi -dmenu -markup-rows -display-columns 2 | awk -F '\\t' '{print $1}' | xargs -r -I {} code --folder-uri \"{}\""))
 
