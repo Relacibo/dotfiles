@@ -24,9 +24,9 @@ hl.env("QT_QPA_PLATFORMTHEME", "qt6ct") -- fuer Qt-Apps (qt6ct)
 -- ###################
 
 local terminal             = "wezterm"
-local filePickerTerminal   = "wezterm start -e zsh -ic 'cd $(tere) && zsh'"
+local filePickerTerminal   = "wezterm start -e /home/reinhard/.cargo/bin/nu -l -c 'cd (tere | str trim); nu'"
 local textEditor           = "wezterm start hx"
-local filePickerTextEditor = "wezterm start -e zsh -c 'hx -w $(tere)'"
+local filePickerTextEditor = "wezterm start -e /home/reinhard/.cargo/bin/nu -l -c 'hx -w (tere | str trim)'"
 local browser              = "firefox"
 local fileManager          = "nautilus"
 local menu                 = "rofi -show drun"
@@ -178,16 +178,19 @@ hl.animation({ leaf = "zoomFactor",    enabled = true, speed = 7,    bezier = "q
 
 local mainMod = "SUPER"
 
--- Q-Familie: plain=zsh, Shift=nushell, Ctrl(+Shift)=tere/re-Variante
--- nu mit Absolutpfad: wezterm spawnt ohne Shell, PATH ist das minimale Session-Env
+-- Q-Familie: plain=nu (Hauptshell-Test via wezterm default_prog), Shift=zsh,
+-- Ctrl=tere->nu, Ctrl+Shift=re->zsh
+-- nu mit Absolutpfad: wezterm spawnt ohne Shell, PATH ist das minimale Session-Env.
+-- Und mit -l: dieses nu laedt Config NUR im Login-Mode — ohne -l kein
+-- .profile-Import, also fehlen tere/opencode/node.
 hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(terminal))
-hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("wezterm start --always-new-process -e /home/reinhard/.cargo/bin/nu"))
+hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("wezterm start --always-new-process -e /bin/zsh"))
 -- tere/re(): Ctrl legt den File-Picker dazu (Shift waehlt die Shell)
 hl.bind(mainMod .. " + CTRL + Q", hl.dsp.exec_cmd(filePickerTerminal))
-hl.bind(mainMod .. " + CTRL + SHIFT + Q", hl.dsp.exec_cmd("wezterm start --always-new-process -e zsh -ic 'cd $(tere) && nu'"))
+hl.bind(mainMod .. " + CTRL + SHIFT + Q", hl.dsp.exec_cmd("wezterm start --always-new-process -e /bin/zsh -ic 'cd $(tere) && zsh'"))
 -- tere ausfuehren, dann opencode im gewaehlten Verzeichnis
-hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("wezterm start --always-new-process -- zsh -ic opencode"))
-hl.bind(mainMod .. " + SHIFT + O", hl.dsp.exec_cmd("wezterm start --always-new-process -e zsh -c 'cd $(tere) && zsh -ic opencode'"))
+hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("wezterm start --always-new-process -- /home/reinhard/.cargo/bin/nu -l -c 'opencode'"))
+hl.bind(mainMod .. " + SHIFT + O", hl.dsp.exec_cmd("wezterm start --always-new-process -e /home/reinhard/.cargo/bin/nu -l -c 'cd (tere | str trim); opencode'"))
 hl.bind(mainMod .. " + C", hl.dsp.window.close())
 hl.bind(mainMod .. " + M", hl.dsp.exit())
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
@@ -242,7 +245,10 @@ hl.bind(mainMod .. " + B",        hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. " + SHIFT + C", hl.dsp.exec_cmd("~/.cargo/bin/codep recent -a | rofi -dmenu | xargs -r -I {} code --new-window \"{}\""))
 hl.bind(mainMod .. " + CTRL + SHIFT + C", hl.dsp.exec_cmd("~/.cargo/bin/codep -p workspaces -aD -M 365 | rofi -dmenu -markup-rows -display-columns 2 | awk -F '\\t' '{print $1}' | xargs -r -I {} code --folder-uri \"{}\""))
 
-hl.bind(mainMod .. " + CTRL + V", hl.dsp.exec_cmd("cliphist list | rofi -dmenu | cliphist decode | wl-copy"))
+hl.bind(mainMod .. " + CTRL + V", hl.dsp.exec_cmd("$HOME/.dotfiles/hyprland/.config/hypr/cliphist-menu.sh")) -- Zwischenablage-Verlauf: kopieren/loeschen/wipe
+
+hl.bind(mainMod .. " + U",          hl.dsp.exec_cmd("rofimoji"))          -- Emoji-Picker
+hl.bind(mainMod .. " + SHIFT + U", hl.dsp.exec_cmd("rofimoji -f all"))  -- Voller Unicode-Picker (auch em dash etc.)
 
 hl.bind(mainMod .. " + SHIFT + P",        hl.dsp.exec_cmd("hyprshot -o $HOME/Bilder/hyprshot -m region"))
 hl.bind(mainMod .. " + CTRL + SHIFT + P", hl.dsp.exec_cmd("hyprshot -o $HOME/Bilder/hyprshot -m window"))
@@ -251,6 +257,7 @@ hl.bind(mainMod .. " + SHIFT + ALT + O", hl.dsp.exec_cmd("bash -c 'FEN=$(hyprsho
 hl.bind(mainMod .. " + I",              hl.dsp.exec_cmd("hyprpicker -a"))
 
 hl.bind(mainMod .. " + K", hl.dsp.exec_cmd("$HOME/.dotfiles/hyprland/.config/hypr/switch_kvm.sh")) -- KVM auf Ziel in KVM_TARGET umschalten
+hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("$HOME/.dotfiles/hyprland/.config/waybar/scripts/dunst-history-menu.sh")) -- Benachrichtigungs-Verlauf (dunst)
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("$HOME/.config/hypr/toggle_theme.sh"))                   -- Dark/Light-Mode umschalten
 
 -- Keybindings fuer Monitor-Rotation

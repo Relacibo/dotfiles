@@ -80,6 +80,7 @@ SELECTION=$(awk -F'|' '{
     -show-icons \
     -markup-rows \
     -selected-row "$SELECTED_INDEX" \
+    -theme-str 'mainbox { children: [inputbar, listview, message]; }' \
     -mesg "Enter=Anzeigen • Alt+d=Löschen • Alt+x=Alle löschen" \
     -kb-custom-1 "Alt+d" \
     -kb-custom-2 "Alt+x")

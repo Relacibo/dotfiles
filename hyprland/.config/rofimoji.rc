@@ -1,0 +1,11 @@
+# Rofimoji-Konfiguration (Long-Options ohne "--")
+# https://github.com/fdw/rofimoji
+
+# Grid-Theme statt Liste; Beschreibungen ausblenden (bleiben durchsuchbar!)
+hidden-descriptions = True
+
+# Theme laden + Pfeiltasten nur fuer Grid-Navigation statt Cursor-Bewegung + Shortcut-Hinweise unten
+selector-args = -theme /home/reinhard/.config/rofi/rofimoji-grid.rasi -kb-row-left Left -kb-row-right Right -kb-move-char-back Control+b -kb-move-char-forward Control+f -mesg "<span size='small'><b>⏎</b> Einfügen · <b>Shift+⏎</b> Mehrfach · <b>Alt+c</b> Kopieren · <b>Alt+t</b> Tippen · <b>Alt+p</b> Zwischenablage · <b>Alt+n</b> Codepoint tippen · <b>Alt+u</b> Codepoint-Text · <b>Alt+i</b> Codepoint kopieren · <b>Alt+1–9</b> Zuletzt · <b>Esc</b> Abbrechen</span>"
+
+# Keine Hautton-Nachfrage bei jedem Pick (Alternativen: light, medium-light, moderate, dark, ask)
+skin-tone = neutral
