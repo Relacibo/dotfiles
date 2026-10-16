@@ -52,7 +52,7 @@ hl.on("hyprland.start", function ()
     -- Zombie-Daemons mehr), dann einmalige Entsperrung per Prompt am Session-Start
     -- (bewusst, da PAM-Handover unter Hyprland nicht greift; Prompt ist remote via
     --  Moonlight beantwortbar, da normales GTK-Fenster im Session-Stream)
-    hl.exec_cmd("gnome-keyring-daemon --start --components=secrets,pkcs11,ssh && sleep 1 && secret-tool lookup keyring unlock >/dev/null 2>&1 || true")
+    hl.exec_cmd("gnome-keyring-daemon --start --components=secrets,pkcs11,ssh && sleep 1 && $HOME/.dotfiles/hyprland/.config/hypr/unlock-keyring.py")
     hl.exec_cmd("waybar")
     hl.exec_cmd("dunst -conf $HOME/.config/dunst/dunstrc")
     hl.exec_cmd("wl-paste --type text --watch cliphist store")  -- Stores only text data
