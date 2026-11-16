@@ -1,25 +1,19 @@
 {
+  "openH264Enabled": true,
+  "BACKGROUND_COLOR": "#121214",
+  "offloadAdmControls": true,
+  "DESKTOP_TTI_UPDATE_BACKOFF_MAX_MS": 20000,
+  "chromiumSwitches": {},
   "IS_MAXIMIZED": true,
   "IS_MINIMIZED": false,
   "WINDOW_BOUNDS": {
-    "x": 0,
-    "y": 0,
-    "width": 1920,
-    "height": 1080
+    "x": 9,
+    "y": 57,
+    "width": 2541,
+    "height": 1533
   },
-  "MINIMIZE_TO_TRAY": false,
-  "OPEN_ON_STARTUP": false,
-  "SKIP_HOST_UPDATE": true,
-  "enableHardwareAcceleration": false,
-  "chromiumSwitches": {},
-  "BACKGROUND_COLOR": "#121214",
-  "offloadAdmControls": true,
-  "asyncVideoInputDeviceInit": false,
-  "openH264Enabled": true,
-  "DESKTOP_TTI_UPDATE_BACKOFF_MAX_MS": 20000,
   "DESKTOP_TTI_DNSTCP_WARMUP": true,
-  "DESKTOP_TTI_EARLY_UPDATE_CHECK": true,
   "DESKTOP_TTI_HTTP_CDT": true,
-  "DESKTOP_TTI_REMOVE_V8_CACHE_CLEAR": false,
-  "DESKTOP_TTI_SPLASH_USE_WEBP": true
+  "DESKTOP_TTI_SPLASH_USE_WEBP": true,
+  "DESKTOP_TTI_EARLY_UPDATE_CHECK": true
 }

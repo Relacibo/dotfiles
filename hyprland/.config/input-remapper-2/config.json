@@ -1,5 +1,5 @@
 {
-    "version": "2.2.0",
+    "version": "2.2.1",
     "autoload": {
         "Logitech Gaming Keyboard G213": "minecraft",
         "Logitech Gaming Mouse G402": "minecraft"

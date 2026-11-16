@@ -199,6 +199,5 @@ if [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]]; then
   source "$SDKMAN_DIR/bin/sdkman-init.sh"
 fi
 
-
-# Added by Antigravity CLI installer
-export PATH="/home/reinhard/.local/bin:$PATH"
+# opencode
+export PATH=/home/reinhard/.opencode/bin:$PATH
