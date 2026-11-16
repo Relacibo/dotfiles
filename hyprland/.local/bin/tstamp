@@ -1,0 +1,4 @@
+#!/bin/sh
+# Wrapper für den zsh-Alias aus ~/.zshrc: funktioniert auch in nicht-interaktiven
+# Shells (Helix :pipe, Scripts, cron).
+exec todofmt stamp "$@"

@@ -11,5 +11,8 @@ theme = "github_dark_high_contrast_custom"
 "L" = ":lsp-restart"
 "u" = ":theme github_dark_high_contrast_custom_no_underlines"
 "U" = ":theme github_dark_high_contrast_custom"
+# todo.txt: Zeile abhaken (todofmt done = x + heutiges Datum, idempotent).
+# Kein per-Language-Keybind in Helix — global gebunden, im Zweifel undo (u).
+"x" = ["extend_to_line_bounds", ":pipe todofmt done"]
 # [editor.lsp]
 # display-inlay-hints = true
