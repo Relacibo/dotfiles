@@ -1,0 +1,9 @@
+# gstream-Aufloesungs-Presets:  NAME=BREITExHÖHE[:SCALE]
+# Aufruf: gstream on <NAME> [scale]
+cachyos=2560x1600:1.6
+laptop=2560x1600:1.6
+1080p=1920x1080
+tv=1920x1080
+phone=2340x1080
+4k=3840x2160
+1440p=2560x1440

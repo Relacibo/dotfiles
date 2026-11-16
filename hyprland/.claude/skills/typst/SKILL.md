@@ -112,6 +112,8 @@ This is unrelated to the earlier finding that **SFTPGo cannot host git repos** �
 
 ## 5. Fonts
 
+**Only reference fonts that actually exist on this system** — verify with `typst fonts | rg -i <name>` before setting a `font:` anywhere. Safe, verified defaults here: `Libertinus Serif` (Typst-bundled, good body font) and `DejaVu Sans` / `DejaVu Sans Mono` (headings, code). Known trap: `Libertinus Sans` is *not* installed (Typst's bundled Libertinus only ships Serif + Math) — referencing it yields fallback warnings and inconsistent rendering; use `DejaVu Sans` for a sans heading face instead.
+
 Two font locations, both additive (not override tiers):
 
 1. `$(xdg-user-dir DOCUMENTS)/typst/fonts/` — personal fonts reused across many documents.
@@ -144,10 +146,18 @@ The GitHub API is unauthenticated here (60 requests/hour limit) — fine for occ
 Don't generate a per-document compile script — it's the same few lines copied N times with nothing to keep them in sync. Use the single shared script at `~/.gemini/config/skills/typst/scripts/compile.sh` (or `~/.claude/skills/typst/scripts/compile.sh` / `~/.config/opencode/skills/typst/scripts/compile.sh` if using OpenCode/DeepSeek) instead, for any doc root (global or project-local):
 
 ```
-~/.gemini/config/skills/typst/scripts/compile.sh <doc-root> [extra typst args...]
+~/.gemini/config/skills/typst/scripts/compile.sh <doc-root> [output-name.pdf] [extra typst args...]
 ```
 
-It derives `<typst-root>/rendered/<doc-slug>/main.pdf` from `<doc-root>` (which must be `.../typst/sources/<doc-slug>`), compiling from `<doc-root>/src/main.typ`, adds `<doc-root>/fonts` if present, and falls back to adding the global fonts dir explicitly only if `TYPST_FONT_PATHS` isn't set in the environment.
+It derives `<typst-root>/rendered/<doc-slug>/` from `<doc-root>` (which must be `.../typst/sources/<doc-slug>`), compiling from `<doc-root>/src/main.typ`, adds `<doc-root>/fonts` if present, and falls back to adding the global fonts dir explicitly only if `TYPST_FONT_PATHS` isn't set in the environment.
+
+The optional second positional argument (not starting with `-`) overrides the output **filename** (default: `main.pdf`). For anything that will be emailed, shared or printed, use a descriptive, self-explanatory German filename instead of `main.pdf` — recipients should know what the attachment is without opening it:
+
+```
+~/.claude/skills/typst/scripts/compile.sh <doc-root> Anleitung-Samsung-SSD-Update.pdf
+```
+
+Remaining args are passed through to `typst compile` unchanged.
 
 After every compile, state the absolute path to the rendered file(s) back to the user — don't make them re-derive it from the folder convention or ask where it went.
 

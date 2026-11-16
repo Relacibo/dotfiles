@@ -1,0 +1,12 @@
+[Unit]
+Description=SSH tunnel for trading MCP server
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/ssh -o ConnectTimeout=10 -o ServerAliveInterval=60 -o ExitOnForwardFailure=yes -N -L 18720:127.0.0.1:8720 ovilava
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

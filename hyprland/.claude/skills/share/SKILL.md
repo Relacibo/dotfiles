@@ -39,6 +39,23 @@ Use when user says "schick mir den Link", "per ntfy", "push notification".
 
 Use when user says "per Email", "schick es an X", "sende an".
 
+**Longer text mail without attachment** (e.g. a drafted mail in a file, one line per paragraph):
+compose as **HTML**, never `format=text`, because plain-text compose hard-wraps every line at
+72 characters. Convert paragraphs (blank-line separated) to `<p>`, single newlines to `<br>`,
+HTML-escape the text, write it under `~/Downloads/.share-attachments/` (Flatpak sandbox), then:
+```bash
+nohup flatpak run --command=thunderbird net.thunderbird.Thunderbird \
+  -compose "subject='<subject>',format=html,message='$HOME/Downloads/.share-attachments/body.html'" >/dev/null 2>&1 &
+```
+Leave `to=` out if the user fills in the recipient.
+
+**Sender for business mail:** for anything business-related (ApoTune, blue-bizz, colleagues,
+customers, tickets) set the sender to `reinhard.bronner@blue-bizz.email` by adding
+`from='reinhard.bronner@blue-bizz.email'` to the `-compose` argument (Thunderbird picks the
+matching identity). Private mail keeps Thunderbird's default identity. `share-email.sh` has no
+sender parameter: for business mail with an attachment, call `-compose` directly with `from=`
+and `attachment='<file>'`.
+
 ## Channel 3: SFTPGo — permanent link
 
 ```bash

@@ -1,0 +1,34 @@
+# restic excludes – eine Zeile pro Muster (glob)
+# Müll & Caches
+/home/reinhard/.cache
+/home/reinhard/.local/share/Trash
+/home/reinhard/.npm
+/home/reinhard/temp
+/home/reinhard/.var/app/*/cache
+# Toolchains (jederzeit via Package-Manager neu holbar)
+/home/reinhard/.rustup
+/home/reinhard/.cargo/registry
+/home/reinhard/.cargo/git
+/home/reinhard/.nvm
+/home/reinhard/.ghcup
+/home/reinhard/.vscode
+/home/reinhard/.local/share/pnpm
+/home/reinhard/.local/share/virtualenvs
+# Steam: Spiele/Workshop/Compatdata weg, Config+_userdata+Saves bleiben
+/home/reinhard/.local/share/Steam/steamapps
+# laut Scope-Entscheidung (Default: Recommended) raus:
+/home/reinhard/Games
+/home/reinhard/playground
+/home/reinhard/.local/share/gnome-boxes
+/home/reinhard/.local/share/containers
+# Build-Artefakte in git-Repos (reproduzierbar)
+**/node_modules
+**/target
+**/__pycache__
+# Editor-Caches (Junk + EIO-Quelle)
+/home/reinhard/.config/Code/Cache
+/home/reinhard/.config/Code/Cache_Debug
+/home/reinhard/.config/Code/Service Worker
+/home/reinhard/.config/Code/CachedData
+/home/reinhard/.config/Code/CachedExtensionVSIXs
+/home/reinhard/.config/Code/logs

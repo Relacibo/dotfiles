@@ -82,8 +82,8 @@
 ; method = pulse
 ; source = auto
 
-; method = pipewire
-; source = auto
+method = pipewire
+source = auto
 
 ; method = alsa
 ; source = hw:Loopback,1
@@ -125,6 +125,17 @@
 
 
 [output]
+
+# # Wechsel von ncurses (Terminal) auf SDL + GLSL-Shader
+method = sdl_glsl
+
+# # Pfad zum Fragment-Shader (relativ zu ~/.config/cava/shaders/ oder absolut)
+fragment_shader = eye_of_phi.frag
+
+# # Optional: Fenster-Einstellungen für SDL
+# # sdl_full_screen = 0
+# sdl_width = 800
+# sdl_height = 400
 
 # Output method. Can be 'ncurses', 'noncurses', 'raw', 'noritake', 'sdl'
 # or 'sdl_glsl'.

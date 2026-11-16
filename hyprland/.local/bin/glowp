@@ -1,0 +1,14 @@
+#!/bin/sh
+# glowp – glow im Pager-Modus, Umbruch = volle Terminalbreite
+# (glow cappt sonst bei 120). Echtes Script statt Shell-Funktion:
+# funktioniert in zsh, nushell und nicht-interaktiven Shells.
+#
+# Breite: $COLUMNS, sonst tty-Größe (erst Controlling-TTY, dann stdin),
+# sonst 160. 0/leere/Müll-Werte gelten als ungültig (bash setzt COLUMNS
+# z. B. auf 0, wenn kein Terminal da ist).
+ok() { case "$1" in ''|0|*[!0-9]*) return 1 ;; *) return 0 ;; esac; }
+cols=$COLUMNS
+ok "$cols" || cols=$(stty size 2>/dev/null </dev/tty | cut -d' ' -f2)
+ok "$cols" || cols=$(stty size 2>/dev/null | cut -d' ' -f2)
+ok "$cols" || cols=160
+exec glow -p -w $(( cols - 4 )) "$@"

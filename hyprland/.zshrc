@@ -102,11 +102,7 @@ source $ZSH/oh-my-zsh.sh
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-   export EDITOR='code'
-# fi
+# → liegt jetzt zentral in ~/.profile (EDITOR/VISUAL = hx)
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -122,21 +118,8 @@ fpath+=~/.zfunc
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-[ -f "/home/reinhard/.ghcup/env" ] && source "/home/reinhard/.ghcup/env" # ghcup-env
-. "$HOME/.cargo/env"
-
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/programs/firefox:$PATH"
-export PATH="$HOME/programs/blender:$PATH"
-export PATH="$HOME/programs/flutter/bin:$PATH"
-export PATH="$HOME/go/bin:$PATH"
-export PATH="$(yarn global bin):$PATH"
-export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
-export PATH="$HOME/git/hyprmcsr/bin:$PATH"
-export PATH="$HOME/programs/ngrok:$PATH"
-export PATH="$HOME/programs/roc/:$PATH"
-
-export WINEDLLPATH=$WINEDLLPATH:/opt/rpc-wine/bin64:/opt/rpc-wine/bin32
+# PATH & zentrale Env-Variablen: ~/.profile (eine Quelle für zsh + nushell)
+. "$HOME/.profile"
 
 # Pfade definieren
 NVM_SYSTEM_INIT="/usr/share/nvm/init-nvm.sh"
@@ -193,11 +176,28 @@ cl() {
 fpath=(/home/reinhard/git/hyprmcsr/tab-completions $fpath)
 autoload -Uz compinit && compinit
 
+alias claude-priv='CLAUDE_CONFIG_DIR=$HOME/.claude-private claude'
+
+# todofmt (~/git/todofmt): kurze Namen fürs Terminal.
+# tdone/tstamp sind echte Scripts in ~/.local/bin (dotfiles, via Stow verlinkt),
+# damit sie auch in nicht-interaktiven Shells funktionieren — Helix :pipe, cron.
+alias tfmt='todofmt'
+
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 if [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]]; then
   source "$SDKMAN_DIR/bin/sdkman-init.sh"
 fi
+
+# glowp – glow im Pager-Modus, Umbruch = volle Terminalbreite (glow cappt
+# sonst bei 120). Läuft jetzt als echtes Script in ~/.local/bin (dotfiles),
+# damit zsh, nushell und nicht-interaktive Shells dasselbe Verhalten haben
+# — wie tstamp/tdone. Die zsh-Funktion hier ist deshalb entfallen.
+
+# Hyprland-Sitzung über uwsm starten (Fedora-44-Session-Framework):
+# sauberes graphical-session.target, Env-Vor-Import, geordnetes Shutdown.
+# Fallback: /usr/bin/start-hyprland (alter Weg)
+alias start-hyprland="uwsm start hyprland"
 
 # opencode
 export PATH=/home/reinhard/.opencode/bin:$PATH

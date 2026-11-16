@@ -43,7 +43,7 @@ else
 
     # GTK / System
     gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
-    gsettings set org.gnome.desktop.interface gtk-theme "adw-gtk3"
+    gsettings set org.gnome.desktop.interface gtk-theme "adw-gtk3-dark"
 
     [ "$1" != "--restore" ] && notify-send "Theme" "Switched to Dark Mode"
 fi

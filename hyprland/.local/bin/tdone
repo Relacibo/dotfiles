@@ -1,0 +1,4 @@
+#!/bin/sh
+# todofmt done als echtes Script (statt Alias): funktioniert auch in
+# nicht-interaktiven Shells — Helix :pipe, Scripts, cron.
+exec todofmt done "$@"

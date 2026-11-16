@@ -1,12 +1,21 @@
 #!/usr/bin/env bash
 # Compile a Typst document living at <typst-root>/sources/<slug>/src/main.typ
-# into <typst-root>/rendered/<slug>/main.pdf.
-# Usage: compile.sh <doc-root> [extra typst compile args...]
+# into <typst-root>/rendered/<slug>/<output-name>.pdf.
+# Usage: compile.sh <doc-root> [output-name.pdf] [extra typst args...]
 # <doc-root> must be a .../typst/sources/<slug> path (global or project-local).
+# The optional second positional argument (not starting with "-") overrides the
+# output filename (default: main.pdf). Use a descriptive, human-friendly name
+# for anything that will be shared, emailed or printed.
 set -euo pipefail
 
-doc_root="${1:?usage: compile.sh <doc-root> [extra typst args...]}"
+doc_root="${1:?usage: compile.sh <doc-root> [output-name.pdf] [extra typst args...]}"
 shift
+
+output_name="main.pdf"
+if [ $# -gt 0 ] && [[ "$1" != -* ]]; then
+  output_name="$1"
+  shift
+fi
 
 doc_root="$(cd "$doc_root" && pwd)"
 slug="$(basename "$doc_root")"
@@ -27,4 +36,4 @@ if [ -d "$doc_root/fonts" ]; then
 fi
 
 mkdir -p "$rendered_dir"
-typst compile --root "$doc_root" "${font_args[@]}" "$doc_root/src/main.typ" "$rendered_dir/main.pdf" "$@"
+typst compile --root "$doc_root" "${font_args[@]}" "$doc_root/src/main.typ" "$rendered_dir/$output_name" "$@"

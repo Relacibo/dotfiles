@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+# gaming-mode — virtuellen Monitor + Sunshine per SSH toggeln
+#   gaming-mode on|off|status
+set -euo pipefail
+
+export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+sig_dir="$(ls -td /run/user/"$(id -u)"/hypr/* /tmp/hypr/"$(id -u)"/* 2>/dev/null | head -n1 || true)"
+[[ -d "$sig_dir" ]] || { echo "Kein Hyprland-Instance-Verzeichnis — läuft Hyprland?"; exit 1; }
+export HYPRLAND_INSTANCE_SIGNATURE="$(basename "$sig_dir")"
+
+HYPR_OUTPUT="HEADLESS-1"
+SUN_UNIT="sunshine-gaming"
+
+have_output() { hyprctl monitors all | grep -q "^Monitor $HYPR_OUTPUT "; }
+
+case "${1:-status}" in
+  on)
+    # 1) Stream-Modus-Flag + reload (ALT-Binds laden), DAMIT der reload
+    #    danach gesetzte Monitor-Modi nicht wieder ueberschreibt
+    echo "ALT" > "$HOME/.config/hypr/stream-mod"
+    hyprctl reload >/dev/null
+
+    RES="${2:-1920x1080}"
+    SCALE="${3:-}"
+    RES="${RES//×/x}"; RES="${RES//\*/x}"; RES="${RES//: /x}"
+    if [[ ! "$RES" =~ ^[0-9]+x[0-9]+$ ]]; then
+      hit="$(grep -m1 "^${RES}=" "$HOME/.config/gstream/presets" 2>/dev/null | cut -d= -f2 || true)"
+      if [[ -n "$hit" ]]; then
+        RES="${hit%%:*}"
+        if [[ "$hit" == *:* && -z "$SCALE" ]]; then SCALE="${hit#*:}"; fi
+      else
+        echo "Unbekanntes Preset '$RES' — direkte Auflösung: gstream on 1920x1200 [scale]"
+        echo "Oder Preset ergänzen in ~/.config/gstream/presets (NAME=BREITExHÖHE[:SCALE])"
+        exit 1
+      fi
+    fi
+    [[ "$SCALE" =~ ^[0-9]+(\.[0-9]+)?$ ]] || SCALE="1"
+
+    # 2) idempotent: nur neu anlegen, wenn Output fehlt oder falsche Aufloesung
+    if ! (hyprctl monitors all | grep -q "^Monitor $HYPR_OUTPUT ") || \
+       ! (hyprctl monitors | grep -A2 "^Monitor $HYPR_OUTPUT " | grep -q "${RES}@60"); then
+      hyprctl output remove "$HYPR_OUTPUT" >/dev/null 2>&1 || true
+      hyprctl output create headless "$HYPR_OUTPUT" >/dev/null
+    fi
+    # Mode + Scale immer via Lua-API anwenden (no-op, wenn identisch)
+    hyprctl eval "hl.monitor({output=\"$HYPR_OUTPUT\", mode=\"${RES}@60\", position=\"auto-right\", scale=\"${SCALE}\"})" >/dev/null
+
+    # 3) Fokus + Steam-Regel auf den virtuellen Screen. Im Monitor-losen
+    #    Einsatz ist HEADLESS-1 der einzige Output -> Fallback trifft ihn eh.
+    hyprctl dispatch focusmonitor "$HYPR_OUTPUT" >/dev/null 2>&1 || true
+    hyprctl eval 'hl.window_rule({monitor="HEADLESS-1"},{class="^steam$"})' >/dev/null 2>&1 || true
+
+    # Sunshine: direkt wlr-screencopy (kein Portal-Dialog) + virtueller Screen
+    conf="$HOME/.config/sunshine/sunshine.conf"
+    mkdir -p "$(dirname "$conf")"
+    touch "$conf"
+    grep -q '^output_name' "$conf" || echo "output_name = $HYPR_OUTPUT" >> "$conf"
+    grep -q '^capture' "$conf" || echo "capture = wlr" >> "$conf"
+
+    if ! systemctl --user is-active --quiet "$SUN_UNIT"; then
+      wayland_sock="$(ls -t "$XDG_RUNTIME_DIR"/wayland-* 2>/dev/null | grep -v '\.lock' | head -n1 | xargs -r basename)"
+      systemctl --user reset-failed "$SUN_UNIT" 2>/dev/null || true
+      systemd-run --user --unit="$SUN_UNIT" \
+        --setenv="WAYLAND_DISPLAY=${wayland_sock:-wayland-1}" \
+        sunshine >/dev/null
+    fi
+    echo "ON: $HYPR_OUTPUT aktiv (${RES}@60, scale ${SCALE}), Sunshine läuft (unit: $SUN_UNIT)."
+    echo "ALT-Kürzel aktiv (Alt+T Terminal, Alt+R Launcher, Alt+C Fenster zu, Alt+1..9 Workspace)"
+    ;;
+
+  off)
+    systemctl --user stop "$SUN_UNIT" 2>/dev/null || true
+    hyprctl eval "monitor = $HYPR_OUTPUT, disable" >/dev/null 2>&1 || true
+    hyprctl output remove "$HYPR_OUTPUT" >/dev/null 2>&1 || true
+    echo "SUPER" > "$HOME/.config/hypr/stream-mod"
+    hyprctl reload >/dev/null
+    echo "OFF: Sunshine gestoppt, $HYPR_OUTPUT entfernt, Super-Modus wieder aktiv."
+    ;;
+
+  status)
+    echo "Headless-Output: $(have_output && echo vorhanden || echo fehlt)"
+    echo "Sunshine:        $(systemctl --user is-active "$SUN_UNIT" 2>/dev/null || true)"
+    echo "Workspaces:      $(hyprctl monitors | grep -c Monitor) aktiv"
+    ;;
+
+  *)
+    echo "usage: gstream on [preset|BREITExHÖHE] [scale] | off | status"
+    echo "       z. B. gstream on cachyos    /    gstream on cachyos 1.25    /    gstream on 3840x2160"
+    exit 1
+    ;;
+esac
