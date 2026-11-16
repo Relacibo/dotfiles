@@ -1,0 +1,9 @@
+[Unit]
+Description=CrashWatch: CPU/GPU temps + power sampler fuer Freeze-Forensik
+
+[Service]
+ExecStart=%h/.local/state/crashwatch/monitor.sh
+Restart=always
+
+[Install]
+WantedBy=default.target

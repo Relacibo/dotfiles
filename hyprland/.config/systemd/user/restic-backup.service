@@ -1,0 +1,14 @@
+[Unit]
+Description=restic backups: ovilava (remote) + data0 (lokal), sequenziell
+
+[Service]
+Type=oneshot
+# 1) remote ovilava - "-"-Praefix: Fehler blockiert den lokalen Lauf nicht
+ExecStart=-/usr/bin/env RESTIC_REPOSITORY=sftp:ovilava:/mnt/data/backups/anton-bruckner RESTIC_PASSWORD_FILE=%h/.config/restic/ovilava.pw /home/reinhard/.local/bin/restic backup --exclude-file=%h/.config/restic/excludes.txt %h/Dokumente %h/.config %h/.mozilla %h/.ssh %h/.gnupg %h/mcsr %h/minecraft-server %h/programs %h/Downloads %h/.local/share/osu
+ExecStartPost=-/usr/bin/env RESTIC_REPOSITORY=sftp:ovilava:/mnt/data/backups/anton-bruckner RESTIC_PASSWORD_FILE=%h/.config/restic/ovilava.pw /home/reinhard/.local/bin/restic forget --group-by host --keep-daily 7 --keep-weekly 5 --keep-monthly 12 --prune
+# 2) lokal auf data0 - laeuft garantiert danach (oneshot = sequenziell)
+ExecStart=/usr/bin/env RESTIC_REPOSITORY=/mnt/data0/restic-local RESTIC_PASSWORD_FILE=%h/.config/restic/local.pw /home/reinhard/.local/bin/restic backup --exclude-file=%h/.config/restic/excludes.txt %h/Dokumente %h/.config %h/.mozilla %h/.ssh %h/.gnupg %h/mcsr %h/minecraft-server %h/programs %h/Downloads %h/.local/share/osu
+ExecStartPost=/usr/bin/env RESTIC_REPOSITORY=/mnt/data0/restic-local RESTIC_PASSWORD_FILE=%h/.config/restic/local.pw /home/reinhard/.local/bin/restic forget --group-by host --keep-daily 7 --keep-weekly 5 --keep-monthly 12 --prune
+Nice=19
+IOSchedulingClass=idle
+SuccessExitStatus=3

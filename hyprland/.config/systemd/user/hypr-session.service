@@ -1,0 +1,13 @@
+[Unit]
+Description=Hyprland session bootstrap (pulls graphical-session.target for F44 portals)
+# F44: xdg-desktop-portal hat Requisite=graphical-session.target, Hyprland
+# startet ohne uwsm aber keine Session-Target. Diese Unit zieht sie per
+# Dependency rein (RefuseManualStart des Targets blockiert nur direkte Starts).
+Wants=graphical-session.target
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/true
+RemainAfterExit=yes
