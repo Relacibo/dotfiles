@@ -84,5 +84,25 @@ if [ $RC -eq 0 ] && [ "${NSYNC_NO_GIT:-0}" != "1" ] && [ -d "$GIT_DIR/.git" ]; t
     git -C "$GIT_DIR" commit -q -m "nsync: auto-commit nach bisync"
     echo "=== git auto-commit"
   fi
+  if [ "${NSYNC_NO_PUSH:-0}" != "1" ] && git -C "$GIT_DIR" remote get-url origin >/dev/null 2>&1; then
+    BRANCH=$(git -C "$GIT_DIR" branch --show-current)
+    if [ -n "$BRANCH" ]; then
+      REBASE_CONFLICT=0
+      if git -C "$GIT_DIR" pull --rebase -q origin "$BRANCH"; then
+        :
+      elif [ -d "$GIT_DIR/.git/rebase-merge" ] || [ -d "$GIT_DIR/.git/rebase-apply" ]; then
+        git -C "$GIT_DIR" rebase --abort
+        echo "=== git rebase-Konflikt mit origin — bitte manuell auflösen, danach nsync erneut"
+        REBASE_CONFLICT=1
+      fi
+      if [ "$REBASE_CONFLICT" -eq 0 ]; then
+        if git -C "$GIT_DIR" push -q origin "$BRANCH"; then
+          echo "=== git push"
+        else
+          echo "=== git push fehlgeschlagen — nächster nsync-Run wiederholt"
+        fi
+      fi
+    fi
+  fi
 fi
 exit $RC
