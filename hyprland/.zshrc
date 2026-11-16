@@ -102,11 +102,7 @@ source $ZSH/oh-my-zsh.sh
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-   export EDITOR='code'
-# fi
+# → liegt jetzt zentral in ~/.profile (EDITOR/VISUAL = hx)
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -196,7 +192,14 @@ fi
 
 
 
-# glowp – glow im Pager-Modus, Umbruch = volle Terminalbreite (glow cappt sonst bei 120)
-glowp() { glow -p -w "$(( ${COLUMNS:-160} - 4 ))" "$@"; }
+# glowp – glow im Pager-Modus, Umbruch = volle Terminalbreite (glow cappt
+# sonst bei 120). Läuft jetzt als echtes Script in ~/.local/bin (dotfiles),
+# damit zsh, nushell und nicht-interaktive Shells dasselbe Verhalten haben
+# — wie tstamp/tdone. Die zsh-Funktion hier ist deshalb entfallen.
 
 
+
+# Hyprland-Sitzung über uwsm starten (Fedora-44-Session-Framework):
+# sauberes graphical-session.target, Env-Vor-Import, geordnetes Shutdown.
+# Fallback: /usr/bin/start-hyprland (alter Weg)
+alias start-hyprland="uwsm start hyprland"

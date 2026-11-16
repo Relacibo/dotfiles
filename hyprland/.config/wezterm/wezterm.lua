@@ -13,7 +13,10 @@ config.colors = {
     background = "#0a0c10"
 }
 
-config.default_prog = { '/bin/zsh' }
+-- Hauptshell-Test: nushell (Absolutpfad — wezterm spawnt ohne Login-Shell,
+-- PATH/env liefert config.nu via ~/.profile-Import). Zurück zu zsh:
+-- config.default_prog = { '/bin/zsh' }
+config.default_prog = { '/home/reinhard/.cargo/bin/nu' }
 
 local function recompute_padding(window)
     local window_dims = window:get_dimensions()
@@ -54,6 +57,12 @@ end)
 local act = wezterm.action
 
 config.keys = config.keys or {}
+
+-- Strg+Leertaste als Legacy-NUL-Byte senden: Helix aktiviert das
+-- Kitty-Keyboard-Protocol, unter dem encodiert der aktuelle WezTerm-Build
+-- C-Space so, dass Helix ihn nicht sieht (completion-Trigger tot).
+-- Eine explizite Key-Assignment umgeht das Protokoll und sendet \x00.
+table.insert(config.keys, { key = ' ', mods = 'CTRL', action = act.SendString('\x00') })
 
 -- Shift + Alt + V: Vertical Split
 table.insert(config.keys, { key = 's', mods = 'SHIFT|ALT', action = act.SplitVertical { domain = 'CurrentPaneDomain' } })
@@ -243,5 +252,35 @@ quickselect_plugin.apply_to_config(config, {
         },
     }
 })
+
+-- ── Copy Mode (Strg+Shift+X) ─────────────────────────────────────────
+-- Eigene Bindungen zuerst (first match wins), Defaults danach anhängen.
+-- pcall-Guard: default_key_tables() brach in Build 20261005 die GESAMTE
+-- Config-Evaluation ab (Fallback auf Defaults) — so überlebt wenigstens
+-- der Rest der Config, und der Fehler landet im Log.
+if wezterm.gui then
+    local ok_cm, err_cm = pcall(function()
+        local copy_mode_extra = {
+            -- QWERTZ-Fix: ';' und ',' liegen auf Shift+',' / Shift+'.', die Defaults
+            -- lauten mods='NONE' und matchen die Shift-Variante deshalb nie.
+            { key = ';', mods = 'SHIFT', action = act.CopyMode 'JumpAgain' },
+            { key = ',', mods = 'SHIFT', action = act.CopyMode 'JumpReverse' },
+            -- Helix-Gewohnheit: Esc hebt die Markierung auf und bleibt im Modus;
+            -- Modus beenden geht mit q (Default) oder Shift+Q? -> q reicht.
+            { key = 'Escape', mods = 'NONE', action = act.CopyMode 'ClearSelectionMode' },
+        }
+        config.key_tables = config.key_tables or {}
+        config.key_tables.copy_mode = {}
+        for _, k in ipairs(copy_mode_extra) do
+            table.insert(config.key_tables.copy_mode, k)
+        end
+        for _, k in ipairs(wezterm.gui.default_key_tables().copy_mode) do
+            table.insert(config.key_tables.copy_mode, k)
+        end
+    end)
+    if not ok_cm then
+        wezterm.log_error('Copy-Mode-Block übersprungen: ' .. tostring(err_cm))
+    end
+end
 
 return config
