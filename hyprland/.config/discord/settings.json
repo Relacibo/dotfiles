@@ -2,10 +2,10 @@
   "IS_MAXIMIZED": true,
   "IS_MINIMIZED": false,
   "WINDOW_BOUNDS": {
-    "x": 16,
-    "y": 10,
-    "width": 1757,
-    "height": 983
+    "x": 0,
+    "y": 0,
+    "width": 1920,
+    "height": 1080
   },
   "MINIMIZE_TO_TRAY": false,
   "OPEN_ON_STARTUP": false,
@@ -21,5 +21,7 @@
   "DESKTOP_TTI_EARLY_UPDATE_CHECK": true,
   "DESKTOP_TTI_HTTP_CDT": true,
   "DESKTOP_TTI_REMOVE_V8_CACHE_CLEAR": false,
-  "DESKTOP_TTI_SPLASH_USE_WEBP": true
+  "DESKTOP_TTI_SPLASH_USE_WEBP": true,
+  "DESKTOP_TTI_UPDATE_BACKOFF_ALGO": 1,
+  "DESKTOP_PERF_KEEP_RENDERER_LOG_FILE_OPEN": true
 }
