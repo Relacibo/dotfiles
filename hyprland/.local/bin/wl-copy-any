@@ -1,0 +1,17 @@
+#!/bin/sh
+# wl-copy, das den laufenden Wayland-Socket selbst findet
+# (GNOME: wayland-0, Hyprland: meist wayland-1)
+u=${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
+
+if [ -n "$WAYLAND_DISPLAY" ] && [ -S "$u/$WAYLAND_DISPLAY" ]; then
+    exec wl-copy "$@"
+fi
+
+for d in "$u"/wayland-*; do
+    case "$d" in *.lock) continue ;; esac
+    [ -S "$d" ] || continue
+    exec env WAYLAND_DISPLAY="${d##*/}" wl-copy "$@"
+done
+
+echo "wl-copy-any: kein Wayland-Socket gefunden in $u" >&2
+exit 1

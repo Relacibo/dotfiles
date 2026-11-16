@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+# firefox-link — öffnet Links im Firefox-Profil, das gerade läuft.
+#
+# Als Standardbrowser (x-scheme-handler/http & https) registriert:
+#   - Läuft Firefox mit Profil X  →  "firefox -P X <args>"  (übergibt die URL
+#     an die laufende Instanz dieses Profils)
+#   - Läuft Firefox ohne -P (z. B. über den Profil-Picker gestartet) →
+#     Profil wird über den Lock-Symlink im Profil-Verzeichnis ermittelt und
+#     ebenfalls explizit mit -P übergeben; Fallback: plain "firefox"
+#   - Läuft kein Firefox          →  "firefox -P $DEFAULT_PROFILE <args>"
+#
+# Bei mehreren gleichzeitigen Profilen gewinnt die zuletzt gestartete Instanz.
+# Mit --debug zeigt das Skript nur an, was es tun würde.
+
+DEFAULT_PROFILE="default-release-1"
+
+if [[ "$1" == "--debug" ]]; then debug=1; shift; else debug=0; fi
+
+best_etimes=""
+best_pargs=()
+best_desc=""
+
+main_pids=""
+
+for pid in $(pgrep -x firefox 2>/dev/null); do
+    args=$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null) || continue
+    # Content-Prozesse (Childs) überspringen
+    [[ "$args" == *contentproc* || "$args" == *childID* ]] && continue
+    main_pids="$main_pids $pid"
+    pargs=()
+    if [[ "$args" =~ (^| )(-P|--profile)(=|\ )([^ ]+) ]]; then
+        pargs=("${BASH_REMATCH[2]}" "${BASH_REMATCH[4]}")
+    fi
+    etimes=$(ps -o etimes= -p "$pid" 2>/dev/null | tr -d ' ')
+    [[ -z "$etimes" ]] && continue
+    if [[ -z "$best_etimes" || "$etimes" -lt "$best_etimes" ]]; then
+        best_etimes=$etimes
+        best_pargs=("${pargs[@]}")
+        if [[ ${#pargs[@]} -gt 0 ]]; then
+            best_desc="Profil '${pargs[1]}'"
+        else
+            best_desc="ohne -P (via Profil-Picker?)"
+        fi
+    fi
+done
+
+# Läuft eine Instanz ohne -P: Profil aus dem Lock-Symlink ermitteln
+# (lock -> <host>:+<pid> des Hauptprozesses), um explizit -P übergeben zu können.
+if [[ -n "$best_etimes" && ${#best_pargs[@]} -eq 0 ]]; then
+    for lock in "$HOME"/.mozilla/firefox/*/lock; do
+        [[ -L "$lock" ]] || continue
+        target=$(readlink "$lock")
+        lpid=${target##*+}
+        [[ "$lpid" =~ ^[0-9]+$ ]] || continue
+        # gehört die Lock-PID zu einem der laufenden Hauptprozesse?
+        [[ " $main_pids " == *" $lpid "* ]] || continue
+        prof=$(basename "$(dirname "$lock")")
+        pname=${prof#*.}
+        best_pargs=("-P" "$pname")
+        best_desc="Profil '$pname' (via Lock, pid $lpid)"
+        break
+    done
+fi
+
+if [[ "$debug" == 1 ]]; then
+    if [[ -n "$best_etimes" ]]; then
+        echo "Läuft: $best_desc (seit ${best_etimes}s) → firefox ${best_pargs[*]} $*"
+    else
+        echo "Kein Firefox läuft → firefox -P $DEFAULT_PROFILE $*"
+    fi
+    exit 0
+fi
+
+if [[ -n "$best_etimes" ]]; then
+    exec firefox "${best_pargs[@]}" "$@"
+else
+    exec firefox -P "$DEFAULT_PROFILE" "$@"
+fi
